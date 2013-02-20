@@ -12,6 +12,6 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:scaleType="fitXY"
-        android:src="@drawable/intro" />
+        android:src="@drawable/sg_intro" />
 
 </FrameLayout> 
