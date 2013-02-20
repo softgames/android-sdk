@@ -8,7 +8,7 @@
         android:targetSdkVersion="17" />
     
     <application >
-        <activity android:name="de.softgames.sdk.SoftgamesIntro" android:label="@string/sg_app_name"
+        <activity android:name=".SoftgamesIntro" android:label="@string/sg_app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">
             
