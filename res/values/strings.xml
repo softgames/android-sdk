@@ -2,7 +2,9 @@
 
     <string name="sg_app_name">SoftgamesSDK</string>
     <string name="sg_registered_on_server">Registered on server</string>
-    <string name="sg_wifi_connection">Connected via wifi to %1$s</string>
+    <string name="offline_retry_msg">Please check your Internet connection!</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_exit">Exit</string>
     <plurals name="sg_server_register_error">
         <item quantity="one">Failed to register after one attempt</item>
         <item quantity="other">Failed to register after %d attempts</item>

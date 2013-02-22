@@ -1,5 +1,5 @@
 /**
- * Simple activity class that shows a splash screen when an Application uses the SDK
+ * Activity class that shows a splash screen when an Application uses the SDK
  * starts 
  */
 package de.softgames.sdk;
@@ -16,19 +16,34 @@ import android.util.Log;
 import android.view.WindowManager;
 import de.softgames.sdk.R;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
+import de.softgames.sdk.util.CheckNetwork;
 import de.softgames.sdk.util.SGSettings;
 
+
 /**
+ * The Class SoftgamesIntro.
+ * 
  * @author rolandcastillo
- *
  */
 public class SoftgamesIntro extends Activity {
 
+    /** The Constant TAG. */
     public static final String TAG = "SoftgamesIntro";
+
+    /** The Constant POOL_SIZE. */
     public static final int POOL_SIZE = 1;
+
+    /** The schedule task executor. */
     private ScheduledExecutorService scheduleTaskExecutor;
+
+    /** The launcher activity. */
     private Class<?> launcherActivity = null;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +66,18 @@ public class SoftgamesIntro extends Activity {
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
     }
 
+    /**
+     * The activity set as
+     * {@link de.softgames.sdk.util.SGSettings#launcherActivity
+     * launcherActivity} is started
+     */
     private void startApp() {
         try {
+            if (CheckNetwork.isOnline(getApplicationContext())) {
+                // TODO load cross promotion
+            } else {
+                // TODO display image from resources
+            }
             // The launcher activity set by the user as entry point is
             // instantiated
             launcherActivity = SGSettings.getLauncherActivity();
@@ -68,6 +93,11 @@ public class SoftgamesIntro extends Activity {
         finish();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.app.Activity#onDestroy()
+     */
     @Override
     protected void onDestroy() {
         scheduleTaskExecutor.shutdown();

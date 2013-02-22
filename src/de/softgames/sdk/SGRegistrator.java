@@ -11,16 +11,34 @@ import de.softgames.sdk.util.SGSettings;
 import de.softgames.sdk.util.ServerUtilities;
 
 
+/**
+ * The Class SGRegistrator.
+ */
 public class SGRegistrator {
 
+    /** The Constant TAG. */
     private static final String TAG = "SGRegistrator";
-    private Context ctx;
-    private AsyncTask<Void, Void, Void> _registerTask;
 
+    /** The application context. */
+    private Context ctx;
+
+    /** The register task. */
+    private AsyncTask<Void, Void, Void> registerTask;
+
+    /**
+     * Instantiates a new softgames {@link com.softgames.de.sdk.SGRegistrator
+     * registrator} object.
+     * 
+     * @param ctx
+     *            the context
+     */
     public SGRegistrator(Context ctx) {
         this.ctx = ctx;
     }
 
+    /**
+     * Register me.
+     */
     public void registerMe() {
         Log.d(TAG, "registerMe() method invoked...");
         GCMRegistrar.checkDevice(ctx);
@@ -35,7 +53,7 @@ public class SGRegistrator {
             GCMRegistrar.setRegisteredOnServer(ctx, false);
             if (!GCMRegistrar.isRegisteredOnServer(ctx)) {
 
-                _registerTask = new AsyncTask<Void, Void, Void>() {
+                registerTask = new AsyncTask<Void, Void, Void>() {
 
                     @Override
                     protected Void doInBackground(Void... params) {
@@ -58,18 +76,21 @@ public class SGRegistrator {
 
                     @Override
                     protected void onPostExecute(Void result) {
-                        _registerTask = null;
+                        registerTask = null;
                     }
 
                 };
-                _registerTask.execute(null, null, null);
+                registerTask.execute(null, null, null);
             }
         }
     }
 
+    /**
+     * Kill task.
+     */
     public void killTask() {
-        if (_registerTask != null) {
-            _registerTask.cancel(true);
+        if (registerTask != null) {
+            registerTask.cancel(true);
         }
         try {
             GCMRegistrar.onDestroy(ctx);

@@ -4,9 +4,11 @@
 package de.softgames.sdk.ui;
 
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import de.softgames.sdk.R;
 import de.softgames.sdk.model.SoftgamesNotification;
+import de.softgames.sdk.util.CheckNetwork;
 import de.softgames.sdk.util.SGSettings;
 
 
@@ -25,11 +28,27 @@ import de.softgames.sdk.util.SGSettings;
  */
 public final class SoftgamesUI {
 
+    /** The Constant TAG. */
     private static final String TAG = "SoftgamesUI";
+
+    /** The launcher activity. */
     private static Class<?> launcherActivity;
+
+    /** The message id. */
     private static int messageId = 0;
+
+    /** The res. */
     private static Resources res;
 
+    /**
+     * Generate a custom notification with the info received from our
+     * notifications web tool(AKA uhura).
+     * 
+     * @param context
+     *            the context
+     * @param intent
+     *            the intent
+     */
     public static void generateSGNotification(Context context, Intent intent) {
         String message = intent.getStringExtra("message");
         String title = intent.getStringExtra("title");
@@ -40,9 +59,15 @@ public final class SoftgamesUI {
         generateNotification(context, softgamesNotification);
     }
 
+    /**
+     * Generate test notification.
+     * 
+     * @param context
+     *            the context
+     */
     public static void generateTestNotification(Context context) {
-        String message = "Test title";
-        String title = "test";
+        String message = "Test Message";
+        String title = "Foo Bar";
 
         SoftgamesNotification softgamesNotification = new SoftgamesNotification(
                 title, message);
@@ -70,7 +95,7 @@ public final class SoftgamesUI {
         String title = sgNotification.getTitle();
         String message = sgNotification.getMessage();
 
-        Log.v(TAG, "Received message: " + title);
+        Log.d(TAG, "Received message: " + title);
 
         Bitmap largeNotificationIcon = createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
 
@@ -130,7 +155,39 @@ public final class SoftgamesUI {
             Log.e(TAG, "The res variable is not initialized");
             return null;
         }
+    }
 
+    /**
+     * Builds the retry connection dialog.
+     * 
+     * @param ctx
+     *            the context
+     */
+    public static void buildRetryConnectionDialog(final Context ctx) {
+        Log.d(TAG, "buildRetryConnectionDialog()");
+        res = ctx.getResources();
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+
+        builder.setMessage(res.getString(R.string.offline_retry_msg));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(res.getString(R.string.button_retry),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        CheckNetwork.forceInternetConnection(ctx);
+                    }
+                });
+
+        builder.setNegativeButton(res.getString(R.string.button_exit),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog dlg = builder.create();
+        dlg.show();
     }
 
 }

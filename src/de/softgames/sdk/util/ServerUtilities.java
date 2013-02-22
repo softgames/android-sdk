@@ -16,13 +16,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
-
-import de.softgames.sdk.R;
 
 
 public final class ServerUtilities {
@@ -31,7 +27,6 @@ public final class ServerUtilities {
     private static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final Random random = new Random();
     private static final String TAG = "ServerUtilities";
-    private static Resources res;
 
     /**
      * Register this account/device pair within the server.
@@ -40,7 +35,6 @@ public final class ServerUtilities {
      */
     public static boolean register(final Context context, final String regId) {
         Log.i(TAG, "registering device (regId = " + regId + ")");
-        res = context.getApplicationContext().getResources();
         String serverUrl = SGSettings.SERVER_URL + "/"
                 + context.getPackageName();
         Map<String, String> params = new HashMap<String, String>();
@@ -64,9 +58,6 @@ public final class ServerUtilities {
                 post(serverUrl, params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
                 // registered successfully
-                Toast.makeText(context,
-                        res.getString(R.string.sg_registered_on_server),
-                        Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "registered on server!");
                 return true;
             } catch (IOException e) {
@@ -101,7 +92,6 @@ public final class ServerUtilities {
      */
     public static void unregister(final Context context, final String regId) {
         Log.i(TAG, "unregistering device (regId = " + regId + ")");
-        res = context.getApplicationContext().getResources();
         String deviceId = Installation.id(context);
         String serverUrl = SGSettings.SERVER_URL + "/"
                 + context.getPackageName() + "/"
@@ -111,11 +101,7 @@ public final class ServerUtilities {
             delete(serverUrl, null);
             GCMRegistrar.setRegisteredOnServer(context, false);
             Log.d(TAG, "unregistered from server");
-            Toast.makeText(
-                    context,
-                    res.getQuantityText(R.plurals.sg_server_register_error,
-                            ServerUtilities.MAX_ATTEMPTS), Toast.LENGTH_SHORT)
-                    .show();
+
         } catch (IOException e) {
             /**
              * At this point the device is unregistered from GCM, but still
@@ -129,11 +115,11 @@ public final class ServerUtilities {
     }
 
     /**
-     * Issue a POST request to the server.
+     * Issue a DELETE request to the server.
      * 
      * @param endpoint
      *            POST address.
-     * @param params
+     * 
      * @param params
      *            request parameters.
      * 
@@ -145,11 +131,35 @@ public final class ServerUtilities {
         request("DELETE", endpoint, params);
     }
 
+    /**
+     * Issue a POST request to the server.
+     * 
+     * @param endpoint
+     *            POST address.
+     * 
+     * @param params
+     *            request parameters.
+     * 
+     * @throws IOException
+     *             propagated from POST.
+     */
     private static void post(String endpoint, Map<String, String> params)
             throws IOException {
         request("POST", endpoint, params);
     }
 
+    /**
+     * Request method
+     * 
+     * @param method
+     *            the method attribute specifies how to send the data(POST, GET)
+     * @param endpoint
+     *            the URL to request
+     * @param params
+     *            the parameters for the http request
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private static void request(String method, String endpoint,
             Map<String, String> params) throws IOException {
         URL url;
