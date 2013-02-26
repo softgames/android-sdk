@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import de.softgames.sdk.ui.SoftgamesUI;
 
 
 /**
@@ -33,20 +32,6 @@ public class CheckNetwork {
         }
         Log.d(TAG, "The device is offline");
         return false;
-    }
-
-    /**
-     * Force internet connection.
-     * 
-     * @param ctx
-     *            the context, this must be an Activity context
-     */
-    public static void forceInternetConnection(Context ctx) {
-        Log.d(TAG, "forceInternetConnection()");
-        if (!isOnline(ctx)) {
-            SoftgamesUI.buildRetryConnectionDialog(ctx);
-        }
-
     }
 
 }

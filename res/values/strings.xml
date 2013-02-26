@@ -1,6 +1,7 @@
 <resources>
 
     <string name="sg_app_name">SoftgamesSDK</string>
+    <string name="zoneId">2</string>
     <string name="sg_registered_on_server">Registered on server</string>
     <string name="offline_retry_msg">Please check your Internet connection!</string>
     <string name="button_retry">Retry</string>

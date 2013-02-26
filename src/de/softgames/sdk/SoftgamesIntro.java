@@ -10,11 +10,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import de.softgames.sdk.R;
+import android.widget.ViewFlipper;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.util.CheckNetwork;
 import de.softgames.sdk.util.SGSettings;
@@ -28,16 +31,19 @@ import de.softgames.sdk.util.SGSettings;
 public class SoftgamesIntro extends Activity {
 
     /** The Constant TAG. */
-    public static final String TAG = "SoftgamesIntro";
+    private static final String TAG = "SoftgamesIntro";
 
-    /** The Constant POOL_SIZE. */
-    public static final int POOL_SIZE = 1;
+    /** The number of threads to keep in the pool. */
+    private static final int POOL_SIZE = 3;
 
     /** The schedule task executor. */
     private ScheduledExecutorService scheduleTaskExecutor;
 
     /** The launcher activity. */
     private Class<?> launcherActivity = null;
+
+    protected Resources res;
+    private ViewFlipper flipper;
 
     /*
      * (non-Javadoc)
@@ -48,22 +54,39 @@ public class SoftgamesIntro extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.sg_activity_intro);
+        setContentView(R.layout.sg_flipper);
+        res = getResources();
+        flipper = (ViewFlipper) findViewById(R.id.softgames_master);
 
-        // Method to display a splash screen during the given seconds
+        scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
+        // Thread to display a splash screen during the given seconds
         scheduleTaskExecutor.schedule(new Runnable() {
 
             @Override
             public void run() {
-                startApp();
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAd();
+
+                    }
+                });
             }
 
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
+
+    }
+
+    private void showAd() {
+        if (SGSettings.isInternetRequired()) {
+            requestAd();
+        } else {
+            startApp();
+        }
+
     }
 
     /**
@@ -73,11 +96,6 @@ public class SoftgamesIntro extends Activity {
      */
     private void startApp() {
         try {
-            if (CheckNetwork.isOnline(getApplicationContext())) {
-                // TODO load cross promotion
-            } else {
-                // TODO display image from resources
-            }
             // The launcher activity set by the user as entry point is
             // instantiated
             launcherActivity = SGSettings.getLauncherActivity();
@@ -93,6 +111,28 @@ public class SoftgamesIntro extends Activity {
         finish();
     }
 
+    private void requestAd() {
+        if (!CheckNetwork.isOnline(this)) {
+            buildRetryConnectionDialog();
+        } else {
+            try {
+                flipper.showNext();
+                // Thread to show the ads during the given seconds
+                scheduleTaskExecutor.schedule(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        startApp();
+
+                    }
+                }, SGSettings.AD_DELAY, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                Log.e(TAG, "error", e);
+            }
+        }
+
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -102,5 +142,38 @@ public class SoftgamesIntro extends Activity {
     protected void onDestroy() {
         scheduleTaskExecutor.shutdown();
         super.onDestroy();
+    }
+
+    /**
+     * Builds the retry connection dialog.
+     * 
+     * @param ctx
+     *            the context
+     */
+    public void buildRetryConnectionDialog() {
+        Log.d(TAG, "buildRetryConnectionDialog()");
+        res = this.getResources();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(res.getString(R.string.offline_retry_msg));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(res.getString(R.string.button_retry),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        requestAd();
+                    }
+                });
+
+        builder.setNegativeButton(res.getString(R.string.button_exit),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog dlg = builder.create();
+        dlg.show();
     }
 }
