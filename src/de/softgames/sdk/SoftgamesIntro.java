@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ViewFlipper;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
@@ -59,6 +60,14 @@ public class SoftgamesIntro extends Activity {
         setContentView(R.layout.sg_flipper);
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
+
+        Display display = getWindowManager().getDefaultDisplay();
+
+        OpenxAdView.setViewportWidth(display.getWidth());
+        OpenxAdView.setViewPortHeight(display.getHeight());
+
+        // OpenxAdView adView = (OpenxAdView) findViewById(R.id.adview);
+        // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds

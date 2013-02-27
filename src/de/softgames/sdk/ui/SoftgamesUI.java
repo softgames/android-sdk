@@ -97,7 +97,7 @@ public final class SoftgamesUI {
         Bitmap largeNotificationIcon = createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                context).setSmallIcon(R.drawable.sg_ic_notify_msg)
+                context).setSmallIcon(R.drawable.sg_ic_notify_small)
                 .setLargeIcon(largeNotificationIcon).setContentText(message)
                 .setContentTitle(title);
 

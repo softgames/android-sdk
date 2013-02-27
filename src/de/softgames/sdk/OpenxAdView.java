@@ -80,9 +80,12 @@ public class OpenxAdView extends ViewGroup {
     private static final String PARAMETER_SOURCE = "source";
 
     private static final String DELIVERY_URL = "87.230.102.59:82/openx/www/delivery";
+    private static final String IMG_WIDTH = "100%";
 
-    private static final String HTML_DOCUMENT_TEMPLATE = "<html><head><style>* {padding: 0; margin: 0; background-color: transparent;}</style></head>\n"
-            + "<body>%s</pre></body></html>";
+    private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
+            + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
+            + "<style>* {padding: 0; margin: 0; background-color: transparent; text-align:center;} a img{width:%4$s;height:auto;}</style></head>\n"
+            + "<body>%3$s</pre></body></html>";
 
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;charset=UTF-8"
@@ -103,6 +106,11 @@ public class OpenxAdView extends ViewGroup {
     private Random prng = new Random();
 
     private Resources res;
+
+    private static Integer viewportWidth;
+
+    private static Integer viewPortHeight;
+
 
     /**
      * Initialize widget.
@@ -171,14 +179,16 @@ public class OpenxAdView extends ViewGroup {
         addView(webView);
     }
 
-    public String getZoneTemplate(int zoneID) {
+    protected String getZoneTemplate(int zoneID) {
         try {
             String zoneTag = String.format(JS_TAG,
                     (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong());
-            String raw = String.format(HTML_DOCUMENT_TEMPLATE, zoneTag);
+
+            String raw = String.format(HTML_DOCUMENT_TEMPLATE, viewportWidth,
+                    viewPortHeight, zoneTag, IMG_WIDTH);
             return raw;
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
@@ -361,5 +371,31 @@ public class OpenxAdView extends ViewGroup {
         } else {
             this.source = attrs.getAttributeValue(ATTRS_NS, PARAMETER_SOURCE);
         }
+    }
+
+    public static void setViewportWidth(Integer viewportWidth) {
+        OpenxAdView.viewportWidth = viewportWidth;
+    }
+
+    public static Integer getViewportWidth() {
+        // If the viewport width is not set the minimum android screen size is
+        // taken
+        if (viewportWidth == null) {
+            viewportWidth = 240;
+        }
+        return viewportWidth;
+    }
+
+    public static Integer getViewPortHeight() {
+        // If the viewport height is not set the minimum android screen size is
+        // taken
+        if (viewPortHeight == null) {
+            viewPortHeight = 320;
+        }
+        return viewPortHeight;
+    }
+
+    public static void setViewPortHeight(Integer viewPortHeight) {
+        OpenxAdView.viewPortHeight = viewPortHeight;
     }
 }
