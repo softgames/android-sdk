@@ -19,8 +19,7 @@ import android.webkit.WebView;
 /**
  * This class implements a widget for Android applications to display ads with
  * the help of OpenX Ad Server. It was successfully tested with OpenX Community
- * Edition (a.k.a. OpenX Source) version 2.8.8-rc6 (the most recent at the
- * moment).
+ * Edition (a.k.a. OpenX Source) version 2.8.8-rc6.
  * 
  * It basically wraps a WebView inside ViewGroup and provides an interface to
  * set ad delivery parameters and to load ads.
@@ -65,23 +64,20 @@ import android.webkit.WebView;
  * value.
  * </ul>
  * 
- * @author Kolia Morev <kolyuchiy@gmail.com>
- * @version 1.0, 2011-07-26
  */
 @SuppressLint("DefaultLocale")
 public class OpenxAdView extends ViewGroup {
 
     private static final String ATTRS_NS = "http://softgames.de/schemas/android/openx/0.1";
 
-    private static final String LOGTAG = "OpenXAd";
+    private static final String LOGTAG = "OpenxAdView";
 
-    // private static final String PARAMETER_DELIVERY_URL = "delivery_url";
+    private static final String DELIVERY_URL = "87.230.102.59:82/openx/www/delivery";
     private static final String PARAMETER_JS_TAG_URL = "js_tag_url";
     private static final String PARAMETER_ZONE_ID = "zone_id";
     private static final String PARAMETER_HAS_HTTPS = "has_https";
     private static final String PARAMETER_SOURCE = "source";
 
-    private static final String DELIVERY_URL = "87.230.102.59:82/openx/www/delivery";
     private static final String IMG_WIDTH = "100%";
 
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
@@ -92,8 +88,8 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
-            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s;charset=UTF-8"
-            + "&amp;cb=%4$d&amp;charset=UTF-8&amp;source=%3$s'></script>";
+            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;cb=%4$d&amp;charset=UTF-8"
+            + "charset=UTF-8&amp;source=%3$s'></script>";
 
     private WebView webView;
 

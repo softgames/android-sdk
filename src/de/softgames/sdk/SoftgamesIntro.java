@@ -1,6 +1,6 @@
 /**
- * Activity class that shows a splash screen when an Application uses the SDK
- * starts 
+ * Activity class that shows a splash screen and some ads when a Game uses the SDK
+ *  
  */
 package de.softgames.sdk;
 
@@ -45,7 +45,10 @@ public class SoftgamesIntro extends Activity {
     /** The launcher activity. */
     private Class<?> launcherActivity = null;
 
+    /** The resources */
     protected Resources res;
+
+    /** The Flipper to flip between the splash screen and the ads */
     private ViewFlipper flipper;
 
     /*
@@ -61,11 +64,13 @@ public class SoftgamesIntro extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        // Let's initialize the ad related objects
         initOpenxAds();
 
         setContentView(R.layout.sg_flipper);
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
+
 
         // Log info for debug purposes
         OpenxAdView adView = (OpenxAdView) findViewById(R.id.adview);
@@ -92,7 +97,7 @@ public class SoftgamesIntro extends Activity {
     }
 
     /**
-     * initializes the necessary objects to display ads
+     * initializes the necessary objects to display ads.
      */
     private void initOpenxAds() {
         // Gets an instance of window manager for display related tasks
@@ -103,10 +108,14 @@ public class SoftgamesIntro extends Activity {
         Display display = windowManager.getDefaultDisplay();
         SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
                 display.getWidth(), display.getHeight(), density);
-        Log.e(TAG, softgamesAd.toString());
+        Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
     }
 
+    /**
+     * The ad's layout is requested with its respective banner
+     * 
+     */
     private void showAd() {
         if (SGSettings.isInternetRequired()) {
             requestAd();
@@ -122,6 +131,7 @@ public class SoftgamesIntro extends Activity {
      * launcherActivity} is started
      */
     private void startApp() {
+        Log.d(TAG, "startApp()");
         try {
             // The launcher activity set by the user as entry point is
             // instantiated
@@ -138,19 +148,23 @@ public class SoftgamesIntro extends Activity {
         finish();
     }
 
+    /**
+     * Requests an ad and displays it during the given seconds
+     */
     private void requestAd() {
+        Log.d(TAG, "requestAd()");
         if (!CheckNetwork.isOnline(this)) {
             buildRetryConnectionDialog();
         } else {
             try {
+                flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                 flipper.showNext();
+
                 // Thread to show the ads during the given seconds
                 scheduleTaskExecutor.schedule(new Runnable() {
-
                     @Override
                     public void run() {
                         startApp();
-
                     }
                 }, SGSettings.AD_DELAY, TimeUnit.SECONDS);
             } catch (Exception e) {
@@ -203,4 +217,5 @@ public class SoftgamesIntro extends Activity {
         final AlertDialog dlg = builder.create();
         dlg.show();
     }
+
 }

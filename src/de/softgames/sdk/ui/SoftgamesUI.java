@@ -16,6 +16,9 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import de.softgames.sdk.R;
 import de.softgames.sdk.model.SoftgamesNotification;
 import de.softgames.sdk.util.SGSettings;
@@ -168,6 +171,22 @@ public final class SoftgamesUI {
         manager.getDefaultDisplay().getMetrics(metrics);
         float screenDensity = metrics.density;
         return screenDensity;
+    }
+
+    /**
+     * Animation object coming from the right side
+     * 
+     * @return Animation object
+     */
+    public static Animation inFromRightAnimation() {
+        Animation inFromRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(250);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
     }
 
 }
