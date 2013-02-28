@@ -87,7 +87,6 @@ public class SoftgamesIntro extends Activity {
                     @Override
                     public void run() {
                         showAd();
-
                     }
                 });
             }
