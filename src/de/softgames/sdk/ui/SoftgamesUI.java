@@ -13,7 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 import de.softgames.sdk.R;
 import de.softgames.sdk.model.SoftgamesNotification;
 import de.softgames.sdk.util.SGSettings;
@@ -152,6 +154,20 @@ public final class SoftgamesUI {
             Log.e(TAG, "The res variable is not initialized");
             return null;
         }
+    }
+
+    /**
+     * Gets the current device screen density
+     * 
+     * @param an
+     *            instance of WindowManager
+     * @return a float with the value of the screen's density
+     */
+    public static float getScreenDensity(WindowManager manager) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(metrics);
+        float screenDensity = metrics.density;
+        return screenDensity;
     }
 
 }

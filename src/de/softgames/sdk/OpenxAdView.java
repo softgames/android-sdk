@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
 
+import de.softgames.sdk.model.SoftgamesAd;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -84,11 +86,13 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
-            + "<style>* {padding: 0; margin: 0; background-color: transparent; text-align:center;} a img{width:%4$s;height:auto;}</style></head>\n"
+            + "<style>* {padding: 0; margin: 0; background-color: transparent;"
+            + " text-align:center;} a img{width:%4$s;height:auto;}</style></head>\n"
             + "<body>%3$s</pre></body></html>";
 
     private static final String JS_TAG = ""
-            + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;charset=UTF-8"
+            + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
+            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s;charset=UTF-8"
             + "&amp;cb=%4$d&amp;charset=UTF-8&amp;source=%3$s'></script>";
 
     private WebView webView;
@@ -107,9 +111,7 @@ public class OpenxAdView extends ViewGroup {
 
     private Resources res;
 
-    private static Integer viewportWidth;
-
-    private static Integer viewPortHeight;
+    private static SoftgamesAd softgamesAd;
 
 
     /**
@@ -180,15 +182,18 @@ public class OpenxAdView extends ViewGroup {
     }
 
     protected String getZoneTemplate(int zoneID) {
+
         try {
             String zoneTag = String.format(JS_TAG,
                     (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
-                    prng.nextLong());
+                    prng.nextLong(), softgamesAd.getViewportWidth(),
+                    softgamesAd.getPixelRatio(), softgamesAd.getGameName());
 
-            String raw = String.format(HTML_DOCUMENT_TEMPLATE, viewportWidth,
-                    viewPortHeight, zoneTag, IMG_WIDTH);
+            String raw = String.format(HTML_DOCUMENT_TEMPLATE,
+                    softgamesAd.getViewportWidth(),
+                    softgamesAd.getViewPortHeight(), zoneTag, IMG_WIDTH);
             return raw;
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
@@ -232,6 +237,7 @@ public class OpenxAdView extends ViewGroup {
      *            ID of OpenX zone to load ads from.
      */
     public void load(int zoneID) {
+        Log.d(LOGTAG, "loadUrl with zoneID");
         // check required parameters
         if (deliveryURL != null) {
             webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID),
@@ -373,29 +379,13 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
-    public static void setViewportWidth(Integer viewportWidth) {
-        OpenxAdView.viewportWidth = viewportWidth;
+    public static SoftgamesAd getSoftgamesAd() {
+        return softgamesAd;
     }
 
-    public static Integer getViewportWidth() {
-        // If the viewport width is not set the minimum android screen size is
-        // taken
-        if (viewportWidth == null) {
-            viewportWidth = 240;
-        }
-        return viewportWidth;
+    public static void setSoftgamesAd(SoftgamesAd softgamesAd) {
+        OpenxAdView.softgamesAd = softgamesAd;
     }
 
-    public static Integer getViewPortHeight() {
-        // If the viewport height is not set the minimum android screen size is
-        // taken
-        if (viewPortHeight == null) {
-            viewPortHeight = 320;
-        }
-        return viewPortHeight;
-    }
 
-    public static void setViewPortHeight(Integer viewPortHeight) {
-        OpenxAdView.viewPortHeight = viewPortHeight;
-    }
 }

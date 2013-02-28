@@ -20,6 +20,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ViewFlipper;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
+import de.softgames.sdk.model.SoftgamesAd;
+import de.softgames.sdk.ui.SoftgamesUI;
 import de.softgames.sdk.util.CheckNetwork;
 import de.softgames.sdk.util.SGSettings;
 
@@ -55,19 +57,19 @@ public class SoftgamesIntro extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // We want to show the splash screen and the ads in full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        initOpenxAds();
+
         setContentView(R.layout.sg_flipper);
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
 
-        Display display = getWindowManager().getDefaultDisplay();
-
-        OpenxAdView.setViewportWidth(display.getWidth());
-        OpenxAdView.setViewPortHeight(display.getHeight());
-
-        // OpenxAdView adView = (OpenxAdView) findViewById(R.id.adview);
-        // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
+        // Log info for debug purposes
+        OpenxAdView adView = (OpenxAdView) findViewById(R.id.adview);
+        Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -87,6 +89,22 @@ public class SoftgamesIntro extends Activity {
 
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
 
+    }
+
+    /**
+     * initializes the necessary objects to display ads
+     */
+    private void initOpenxAds() {
+        // Gets an instance of window manager for display related tasks
+        WindowManager windowManager = getWindowManager();
+        // The density is gather in order to determine the pixel ratio
+        Float density = SoftgamesUI.getScreenDensity(windowManager);
+
+        Display display = windowManager.getDefaultDisplay();
+        SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
+                display.getWidth(), display.getHeight(), density);
+        Log.e(TAG, softgamesAd.toString());
+        OpenxAdView.setSoftgamesAd(softgamesAd);
     }
 
     private void showAd() {
