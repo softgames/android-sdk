@@ -83,12 +83,14 @@ public class OpenxAdView extends ViewGroup {
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
             + "<style>* {padding: 0; margin: 0; background-color: transparent;}"
-            + "a{display:table-cell;vertical-align:middle;} a img{width:%4$s;height:auto;}</style></head>\n"
-            + "<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div></pre></body></html>";
+            + "a{display:table-cell;vertical-align:middle;} a img{width:%4$s;height:auto;}</style>"
+            + "</head>\n<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div>"
+            + "</pre></body></html>";
 
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
-            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;cb=%4$d&amp;charset=UTF-8"
+            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
+            + "viewport_height=%8$s&amp;cb=%4$d&amp;charset=UTF-8"
             + "charset=UTF-8&amp;source=%3$s'></script>";
 
     private WebView webView;
@@ -186,11 +188,12 @@ public class OpenxAdView extends ViewGroup {
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
-                    softgamesAd.getPixelRatio(), softgamesAd.getGameName());
+                    softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
+                    softgamesAd.getViewportHeight());
 
             String raw = String.format(HTML_DOCUMENT_TEMPLATE,
                     softgamesAd.getViewportWidth(),
-                    softgamesAd.getViewPortHeight(), zoneTag, IMG_WIDTH);
+                    softgamesAd.getViewportHeight(), zoneTag, IMG_WIDTH);
             return raw;
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);

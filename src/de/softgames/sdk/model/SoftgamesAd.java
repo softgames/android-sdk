@@ -82,7 +82,7 @@ public class SoftgamesAd {
      * 
      * @return the view port height
      */
-    public Integer getViewPortHeight() {
+    public Integer getViewportHeight() {
         return viewPortHeight;
     }
 
