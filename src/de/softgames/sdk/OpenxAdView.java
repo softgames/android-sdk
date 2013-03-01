@@ -82,9 +82,9 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
-            + "<style>* {padding: 0; margin: 0; background-color: transparent;"
-            + " text-align:center;} a img{width:%4$s;height:auto;}</style></head>\n"
-            + "<body>%3$s</pre></body></html>";
+            + "<style>* {padding: 0; margin: 0; background-color: transparent;}"
+            + "a{display:table-cell;vertical-align:middle;} a img{width:%4$s;height:auto;}</style></head>\n"
+            + "<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div></pre></body></html>";
 
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
