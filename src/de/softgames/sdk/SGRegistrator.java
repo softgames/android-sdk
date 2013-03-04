@@ -41,48 +41,56 @@ public class SGRegistrator {
      */
     public void registerMe() {
         Log.d(TAG, "registerMe() method invoked...");
-        GCMRegistrar.checkDevice(ctx);
-        GCMRegistrar.checkManifest(ctx);
-        final String regId = GCMRegistrar.getRegistrationId(ctx);
 
-        if (regId == null || regId.equals("")) {
-            Log.d(TAG, "regId is empty");
-            GCMRegistrar.register(ctx, SGSettings.SENDER_ID);
-        } else {
-            Log.d(TAG, "registered with regId: " + regId);
-            GCMRegistrar.setRegisteredOnServer(ctx, false);
-            if (!GCMRegistrar.isRegisteredOnServer(ctx)) {
+        try {
+            GCMRegistrar.checkDevice(ctx);
+            GCMRegistrar.checkManifest(ctx);
+            final String regId = GCMRegistrar.getRegistrationId(ctx);
 
-                registerTask = new AsyncTask<Void, Void, Void>() {
+            if (regId == null || regId.equals("")) {
+                Log.d(TAG, "regId is empty");
+                GCMRegistrar.register(ctx, SGSettings.SENDER_ID);
+            } else {
+                Log.d(TAG, "registered with regId: " + regId);
+                GCMRegistrar.setRegisteredOnServer(ctx, false);
+                if (!GCMRegistrar.isRegisteredOnServer(ctx)) {
 
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        boolean registered = ServerUtilities.register(ctx,
-                                regId);
-                        /**
-                         * At this point all attempts to register with the app
-                         * server failed, so we need to unregister the device
-                         * from GCM - the app will try to register again when it
-                         * is restarted. Note that GCM will send an unregistered
-                         * callback upon completion, but
-                         * GCMIntentService.onUnregistered() will ignore it.
-                         */
-                        if (!registered) {
-                            GCMRegistrar.unregister(ctx);
+                    registerTask = new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            boolean registered = ServerUtilities.register(ctx,
+                                    regId);
+                            /**
+                             * At this point all attempts to register with the
+                             * app server failed, so we need to unregister the
+                             * device from GCM - the app will try to register
+                             * again when it is restarted. Note that GCM will
+                             * send an unregistered callback upon completion,
+                             * but GCMIntentService.onUnregistered() will ignore
+                             * it.
+                             */
+                            if (!registered) {
+                                GCMRegistrar.unregister(ctx);
+                            }
+
+                            return null;
                         }
 
-                        return null;
-                    }
+                        @Override
+                        protected void onPostExecute(Void result) {
+                            registerTask = null;
+                        }
 
-                    @Override
-                    protected void onPostExecute(Void result) {
-                        registerTask = null;
-                    }
-
-                };
-                registerTask.execute(null, null, null);
+                    };
+                    registerTask.execute(null, null, null);
+                }
             }
+        } catch (Exception e) {
+            Log.e(TAG,
+                    "The device could not be registered, maybe it does not support GCM");
         }
+
     }
 
     /**

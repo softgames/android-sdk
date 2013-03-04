@@ -1,7 +1,7 @@
 <ViewFlipper android:id="@+id/softgames_master" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
     
     <include android:id="@+id/splashScreen" layout="@layout/sg_activity_intro"/>
     <include android:id="@+id/adsLayout" layout="@layout/sg_activity_ads"/>

@@ -18,8 +18,7 @@ import android.webkit.WebView;
 
 /**
  * This class implements a widget for Android applications to display ads with
- * the help of OpenX Ad Server. It was successfully tested with OpenX Community
- * Edition (a.k.a. OpenX Source) version 2.8.8-rc6.
+ * the help of OpenX Ad Server.
  * 
  * It basically wraps a WebView inside ViewGroup and provides an interface to
  * set ad delivery parameters and to load ads.
@@ -30,20 +29,16 @@ import android.webkit.WebView;
  * <pre>
  * {@code
  * <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
- * 		  xmlns:ox="http://denivip.ru/schemas/android/openx/0.1"
+ * 		  xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
  *             android:orientation="vertical"
  *             android:layout_width="match_parent"
  *             android:layout_height="match_parent">
- *   <ru.denivip.android.widgets.OpenxAdView
+ *   <de.softgames.sdk.ui.OpenxAdView
  *             android:id="@+id/adview"
  *             android:layout_width="88px"
  *             android:layout_height="31px" 
  *             ox:delivery_url="@string/openxDeliveryUrl"
  *             ox:zone_id="3" />
- *   <ListView android:layout_width="match_parent"
- *             android:id="@+id/contactList"
- *             android:layout_height="wrap_content"
- *             android:layout_weight="1"/>
  * </LinearLayout>
  * }
  * </pre>
@@ -77,7 +72,8 @@ public class OpenxAdView extends ViewGroup {
     private static final String PARAMETER_ZONE_ID = "zone_id";
     private static final String PARAMETER_HAS_HTTPS = "has_https";
     private static final String PARAMETER_SOURCE = "source";
-
+    // We need to declare a variable with the 100% value since the parser does
+    // not accept the percent sign
     private static final String IMG_WIDTH = "100%";
 
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
@@ -119,6 +115,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context) {
         super(context);
+        Log.d(LOGTAG, "constructor 1");
         this.res = context.getResources();
         this.webView = new WebView(context);
         initWebView();
@@ -134,6 +131,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        Log.d(LOGTAG, "constructor 2");
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs, defStyle);
@@ -149,6 +147,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d(LOGTAG, "constructor 3");
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs);
@@ -211,7 +210,8 @@ public class OpenxAdView extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        load();
+        // If you do not want load the ad manually comment this line out
+        // load();
     }
 
     /**

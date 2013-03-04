@@ -189,4 +189,20 @@ public final class SoftgamesUI {
         return inFromRight;
     }
 
+    /**
+     * out Animation to the left
+     * 
+     * @return
+     */
+    public static Animation outToLeftAnimation() {
+        Animation outToLeft = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outToLeft.setDuration(250);
+        outToLeft.setInterpolator(new AccelerateInterpolator());
+        return outToLeft;
+    }
+
 }

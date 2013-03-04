@@ -26,7 +26,6 @@ public class GCMIntentService extends GCMBaseIntentService {
      */
     public GCMIntentService() {
         super(SGSettings.SENDER_ID);
-        Log.e(TAG, "Instantiating service");
     }
 
     /*

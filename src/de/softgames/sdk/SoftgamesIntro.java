@@ -51,6 +51,8 @@ public class SoftgamesIntro extends Activity {
     /** The Flipper to flip between the splash screen and the ads */
     private ViewFlipper flipper;
 
+    private OpenxAdView adView;
+
     /*
      * (non-Javadoc)
      * 
@@ -73,8 +75,8 @@ public class SoftgamesIntro extends Activity {
 
 
         // Log info for debug purposes
-        OpenxAdView adView = (OpenxAdView) findViewById(R.id.adview);
-        Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
+        adView = (OpenxAdView) findViewById(R.id.adview);
+        // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -152,11 +154,13 @@ public class SoftgamesIntro extends Activity {
      */
     private void requestAd() {
         Log.d(TAG, "requestAd()");
+        long adDelay = SGSettings.AD_DELAY;
         if (!CheckNetwork.isOnline(this)) {
             buildRetryConnectionDialog();
         } else {
             try {
-                flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
+                adView.load();
+                // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                 flipper.showNext();
 
                 // Thread to show the ads during the given seconds
@@ -165,7 +169,7 @@ public class SoftgamesIntro extends Activity {
                     public void run() {
                         startApp();
                     }
-                }, SGSettings.AD_DELAY, TimeUnit.SECONDS);
+                }, adDelay, TimeUnit.SECONDS);
             } catch (Exception e) {
                 Log.e(TAG, "error", e);
             }
