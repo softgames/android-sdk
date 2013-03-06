@@ -78,8 +78,9 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
-            + "<style>* {padding: 0; margin: 0; background-color: transparent;}"
-            + "a{display:table-cell;vertical-align:middle;} a img{width:%4$s;height:auto;}</style>"
+            + "<style>* {padding: 0px; margin: 0px; background-color: transparent;}"
+            + "body,html,#container{height:%4$s;}"
+            + "#container{width:%4$s;position: relative;}img{width: %4$s;position: absolute;top: 0;left: 0;right:0;bottom:0;margin: auto;}</style>"
             + "</head>\n<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div>"
             + "</pre></body></html>";
 
@@ -131,7 +132,6 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Log.d(LOGTAG, "constructor 2");
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs, defStyle);
@@ -147,7 +147,6 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d(LOGTAG, "constructor 3");
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs);
@@ -174,6 +173,7 @@ public class OpenxAdView extends ViewGroup {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new OpenXAdWebChromeClient());
+        webView.setTag("openxWebView");
         // TODO remove for production
         webView.clearCache(true);
         addView(webView);
@@ -264,14 +264,6 @@ public class OpenxAdView extends ViewGroup {
 
     private void setDeliveryURL(AttributeSet attrs) {
         this.deliveryURL = DELIVERY_URL;
-        // int delivery_url = attrs.getAttributeResourceValue(ATTRS_NS,
-        // PARAMETER_DELIVERY_URL, -1);
-        // if (delivery_url != -1) {
-        // this.deliveryURL = res.getString(delivery_url);
-        // } else {
-        // this.deliveryURL = attrs.getAttributeValue(ATTRS_NS,
-        // PARAMETER_DELIVERY_URL);
-        // }
     }
 
     public String getJsTagURL() {

@@ -76,7 +76,7 @@ public class SoftgamesIntro extends Activity {
 
         // Log info for debug purposes
         adView = (OpenxAdView) findViewById(R.id.adview);
-        // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
+
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -160,6 +160,7 @@ public class SoftgamesIntro extends Activity {
         } else {
             try {
                 adView.load();
+                Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
                 // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                 flipper.showNext();
 

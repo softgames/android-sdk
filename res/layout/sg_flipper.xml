@@ -4,6 +4,6 @@
     android:layout_height="fill_parent">
     
     <include android:id="@+id/splashScreen" layout="@layout/sg_activity_intro"/>
-    <include android:id="@+id/adsLayout" layout="@layout/sg_activity_ads"/>
+    <include android:id="@+id/adsLayout" layout="@layout/sg_activity_ads"/>   
     
 </ViewFlipper>
