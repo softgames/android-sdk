@@ -22,7 +22,7 @@ import android.widget.ViewFlipper;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.ui.SoftgamesUI;
-import de.softgames.sdk.util.CheckNetwork;
+import de.softgames.sdk.util.NetworkUtilities;
 import de.softgames.sdk.util.SGSettings;
 
 
@@ -108,7 +108,8 @@ public class SoftgamesIntro extends Activity {
 
         Display display = windowManager.getDefaultDisplay();
         SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
-                display.getWidth(), display.getHeight(), density);
+                display.getWidth(), display.getHeight(), density,
+                NetworkUtilities.isConnectedViaWifi(getApplicationContext()));
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
     }
@@ -155,7 +156,7 @@ public class SoftgamesIntro extends Activity {
     private void requestAd() {
         Log.d(TAG, "requestAd()");
         long adDelay = SGSettings.AD_DELAY;
-        if (!CheckNetwork.isOnline(this)) {
+        if (!NetworkUtilities.isOnline(this)) {
             buildRetryConnectionDialog();
         } else {
             try {

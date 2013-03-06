@@ -87,7 +87,7 @@ public class OpenxAdView extends ViewGroup {
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
             + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
-            + "viewport_height=%8$s&amp;cb=%4$d&amp;charset=UTF-8"
+            + "viewport_height=%8$s&amp;wifi=%9$s&amp;cb=%4$d&amp;charset=UTF-8"
             + "charset=UTF-8&amp;source=%3$s'></script>";
 
     private WebView webView;
@@ -188,7 +188,8 @@ public class OpenxAdView extends ViewGroup {
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
-                    softgamesAd.getViewportHeight());
+                    softgamesAd.getViewportHeight(),
+                    softgamesAd.isConnectedViaWifi());
 
             String raw = String.format(HTML_DOCUMENT_TEMPLATE,
                     softgamesAd.getViewportWidth(),

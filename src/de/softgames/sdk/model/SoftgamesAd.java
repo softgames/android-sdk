@@ -18,6 +18,8 @@ public class SoftgamesAd {
     /** The pixel ratio. */
     private Float pixelRatio;
 
+    private boolean isConnectedViaWifi;
+
     /**
      * Instantiates a new softgames ad.
      * 
@@ -31,13 +33,15 @@ public class SoftgamesAd {
      *            the pixel ratio
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
-            Integer viewPortHeight, Float pixelRatio) {
+            Integer viewPortHeight, Float pixelRatio, boolean isConnectedViaWifi) {
         super();
         this.gameName = gameName;
         this.viewportWidth = viewportWidth;
         this.viewPortHeight = viewPortHeight;
         this.pixelRatio = pixelRatio;
+        this.isConnectedViaWifi = isConnectedViaWifi;
     }
+
 
     /**
      * Gets the game name.
@@ -115,11 +119,21 @@ public class SoftgamesAd {
         this.pixelRatio = pixelRatio;
     }
 
+    public boolean isConnectedViaWifi() {
+        return isConnectedViaWifi;
+    }
+
+    public void setConnectedViaWifi(boolean isConnectedViaWifi) {
+        this.isConnectedViaWifi = isConnectedViaWifi;
+    }
+
+
     @Override
     public String toString() {
         return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
                 + viewportWidth + ", viewPortHeight=" + viewPortHeight
-                + ", pixelRatio=" + pixelRatio + "]";
+                + ", pixelRatio=" + pixelRatio + ", isConnectedViaWifi="
+                + isConnectedViaWifi + "]";
     }
 
 }
