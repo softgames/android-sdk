@@ -99,11 +99,13 @@ public final class SoftgamesUI {
 
         Log.d(TAG, "Received message: " + title);
 
-        Bitmap largeNotificationIcon = createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
+        // Bitmap largeNotificationIcon =
+        // createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
+        // TODO Determine how is gonna be set the large icon
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                context).setSmallIcon(R.drawable.sg_ic_notify_small)
-                .setLargeIcon(largeNotificationIcon).setContentText(message)
+                context).setSmallIcon(R.drawable.sg_ic_notify_msg)
+                .setContentText(message)
                 .setContentTitle(title);
 
         // Creates an explicit intent for an Activity in your app
@@ -136,6 +138,7 @@ public final class SoftgamesUI {
      *            the sg_ic_notify_msg
      * @return the bitmap
      */
+    @SuppressWarnings("unused")
     private static Bitmap createLargeIconBitmap(int sg_ic_notify_msg) {
 
         if (res != null) {
