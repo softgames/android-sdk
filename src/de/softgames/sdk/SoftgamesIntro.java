@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
+import de.softgames.sdk.R;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.ui.SoftgamesUI;
@@ -36,6 +38,9 @@ public class SoftgamesIntro extends Activity {
 
     /** The Constant TAG. */
     private static final String TAG = "SoftgamesIntro";
+
+    /** The Constant FIRST_SESSION to use as key in the SharedPreferences file. */
+    private static final String FIRST_SESSION = "fisrtSession";
 
     /** The number of threads to keep in the pool. */
     private static final int POOL_SIZE = 3;
@@ -63,10 +68,6 @@ public class SoftgamesIntro extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Restore preferences
-        SharedPreferences sgSettings = getSharedPreferences(
-                SGSettings.PREFS_NAME, 0);
-
         // We want to show the splash screen and the ads in full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -74,14 +75,21 @@ public class SoftgamesIntro extends Activity {
         // Let's initialize the ad related objects
         initOpenxAds();
 
+        // TODO add cross-promotion flow and remove toasts
+        if (isFirstSession()) {
+            Toast.makeText(this, "welcome for the first time",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "welcome back!!", Toast.LENGTH_LONG).show();
+        }
+
+
         setContentView(R.layout.sg_flipper);
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
 
-
         // Log info for debug purposes
         adView = (OpenxAdView) findViewById(R.id.adview);
-
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -101,6 +109,8 @@ public class SoftgamesIntro extends Activity {
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
 
     }
+
+
 
     /**
      * initializes the necessary objects to display ads.
@@ -226,6 +236,35 @@ public class SoftgamesIntro extends Activity {
 
         final AlertDialog dlg = builder.create();
         dlg.show();
+    }
+
+    /**
+     * Checks if is first session.
+     * 
+     * @return true, if is first session
+     */
+    protected boolean isFirstSession() {
+        try {
+            // Restore preferences
+            SharedPreferences sgSettings = getSharedPreferences(
+                    SGSettings.PREFS_NAME, 0);
+
+            boolean firstSession = sgSettings.getBoolean(FIRST_SESSION, true);
+
+            if (firstSession) {
+                Log.d(TAG, "This is the first session");
+                SharedPreferences.Editor editor = sgSettings.edit();
+                editor.putBoolean(FIRST_SESSION, false);
+                editor.commit();
+                return true;
+            } else {
+                Log.d(TAG, "This is an old user");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "", e);
+            return true;
+        }
     }
 
 }

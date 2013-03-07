@@ -60,7 +60,7 @@ public class NetworkUtilities {
      */
     public static int getConnectionType(Context ctx) {
         initTelManager(ctx);
-        
+
         if (isConnectedViaWifi(ctx)) {
             return NetworkType.WIFI.getValue();
         }
@@ -71,13 +71,12 @@ public class NetworkUtilities {
             return NetworkType.EDGE.getValue();
         case TelephonyManager.NETWORK_TYPE_GPRS:
             return NetworkType.GPRS.getValue();
-
         case TelephonyManager.NETWORK_TYPE_HSDPA:
             return NetworkType.HSDPA.getValue();
         default:
             return NetworkType.UNKNOWN.getValue();
         }
-        
+
     }
 
     /**
