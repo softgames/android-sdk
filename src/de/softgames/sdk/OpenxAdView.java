@@ -16,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * This class implements a widget for Android applications to display ads with
  * the help of OpenX Ad Server.
@@ -63,19 +64,32 @@ import android.webkit.WebView;
 @SuppressLint("DefaultLocale")
 public class OpenxAdView extends ViewGroup {
 
+    /** The Constant ATTRS_NS. */
     private static final String ATTRS_NS = "http://softgames.de/schemas/android/openx/0.1";
 
+    /** The Constant LOGTAG. */
     private static final String LOGTAG = "OpenxAdView";
 
+    /** The Constant DELIVERY_URL. */
     private static final String DELIVERY_URL = "87.230.102.59:82/openx/www/delivery";
+
+    /** The Constant PARAMETER_JS_TAG_URL. */
     private static final String PARAMETER_JS_TAG_URL = "js_tag_url";
+
+    /** The Constant PARAMETER_ZONE_ID. */
     private static final String PARAMETER_ZONE_ID = "zone_id";
+
+    /** The Constant PARAMETER_HAS_HTTPS. */
     private static final String PARAMETER_HAS_HTTPS = "has_https";
+
+    /** The Constant PARAMETER_SOURCE. */
     private static final String PARAMETER_SOURCE = "source";
     // We need to declare a variable with the 100% value since the parser does
     // not accept the percent sign
+    /** The Constant IMG_WIDTH. */
     private static final String IMG_WIDTH = "100%";
 
+    /** The Constant HTML_DOCUMENT_TEMPLATE. */
     private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
             + "<style>* {padding: 0px; margin: 0px; background-color: transparent;}"
@@ -84,28 +98,38 @@ public class OpenxAdView extends ViewGroup {
             + "</head>\n<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div>"
             + "</pre></body></html>";
 
+    /** The Constant JS_TAG. */
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
             + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
-            + "viewport_height=%8$s&amp;wifi=%9$s&amp;cb=%4$d&amp;charset=UTF-8"
+            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;charset=UTF-8"
             + "charset=UTF-8&amp;source=%3$s'></script>";
 
+    /** The web view. */
     private WebView webView;
 
+    /** The delivery url. */
     private String deliveryURL;
 
+    /** The js tag url. */
     private String jsTagURL = "ajs.php";
 
+    /** The zone id. */
     private Integer zoneID;
 
+    /** The has https. */
     private boolean hasHTTPS = false;
 
+    /** The source. */
     private String source;
 
+    /** The prng. */
     private Random prng = new Random();
 
+    /** The res. */
     private Resources res;
 
+    /** The softgames ad. */
     private static SoftgamesAd softgamesAd;
 
 
@@ -113,6 +137,7 @@ public class OpenxAdView extends ViewGroup {
      * Initialize widget.
      * 
      * @param context
+     *            the context
      */
     public OpenxAdView(Context context) {
         super(context);
@@ -127,8 +152,11 @@ public class OpenxAdView extends ViewGroup {
      * layout file, ad will be loaded automatically.
      * 
      * @param context
+     *            the context
      * @param attrs
+     *            the attrs
      * @param defStyle
+     *            the def style
      */
     public OpenxAdView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -143,7 +171,9 @@ public class OpenxAdView extends ViewGroup {
      * layout file, ad will be loaded automatically.
      * 
      * @param context
+     *            the context
      * @param attrs
+     *            the attrs
      */
     public OpenxAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -153,6 +183,12 @@ public class OpenxAdView extends ViewGroup {
         initWebView();
     }
 
+    /**
+     * Inits the attributes.
+     * 
+     * @param attrs
+     *            the attrs
+     */
     private void initAttributes(AttributeSet attrs) {
         setDeliveryURL(attrs);
         setJsTagURL(attrs);
@@ -161,6 +197,9 @@ public class OpenxAdView extends ViewGroup {
         setSource(attrs);
     }
 
+    /**
+     * Inits the web view.
+     */
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         WebSettings settings = webView.getSettings();
@@ -179,6 +218,13 @@ public class OpenxAdView extends ViewGroup {
         addView(webView);
     }
 
+    /**
+     * Gets the zone template.
+     * 
+     * @param zoneID
+     *            the zone id
+     * @return the zone template
+     */
     protected String getZoneTemplate(int zoneID) {
 
         try {
@@ -189,7 +235,7 @@ public class OpenxAdView extends ViewGroup {
                     prng.nextLong(), softgamesAd.getViewportWidth(),
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                     softgamesAd.getViewportHeight(),
-                    softgamesAd.isConnectedViaWifi());
+                    softgamesAd.getConnectionType());
 
             String raw = String.format(HTML_DOCUMENT_TEMPLATE,
                     softgamesAd.getViewportWidth(),
@@ -202,12 +248,22 @@ public class OpenxAdView extends ViewGroup {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.view.ViewGroup#onLayout(boolean, int, int, int, int)
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
             int bottom) {
         webView.layout(left, top, right, bottom);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.view.View#onFinishInflate()
+     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -233,9 +289,9 @@ public class OpenxAdView extends ViewGroup {
      * and the supplied zoneID. This will not work if the required parameter
      * delivery_url was not set.
      * 
-     * @see #load()
      * @param zoneID
      *            ID of OpenX zone to load ads from.
+     * @see #load()
      */
     public void load(int zoneID) {
         Log.d(LOGTAG, "loadUrl with zoneID");
@@ -248,6 +304,11 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
+    /**
+     * Gets the delivery url.
+     * 
+     * @return the delivery url
+     */
     public String getDeliveryURL() {
         return deliveryURL;
     }
@@ -258,15 +319,27 @@ public class OpenxAdView extends ViewGroup {
      * openx.example.com/delivery.
      * 
      * @param deliveryURL
+     *            the new delivery url
      */
     public void setDeliveryURL(String deliveryURL) {
         this.deliveryURL = deliveryURL;
     }
 
+    /**
+     * Sets the delivery url.
+     * 
+     * @param attrs
+     *            the new delivery url
+     */
     private void setDeliveryURL(AttributeSet attrs) {
         this.deliveryURL = DELIVERY_URL;
     }
 
+    /**
+     * Gets the js tag url.
+     * 
+     * @return the js tag url
+     */
     public String getJsTagURL() {
         return jsTagURL;
     }
@@ -277,11 +350,18 @@ public class OpenxAdView extends ViewGroup {
      * changed.
      * 
      * @param jsTagURL
+     *            the new js tag url
      */
     public void setJsTagURL(String jsTagURL) {
         this.jsTagURL = jsTagURL;
     }
 
+    /**
+     * Sets the js tag url.
+     * 
+     * @param attrs
+     *            the new js tag url
+     */
     private void setJsTagURL(AttributeSet attrs) {
         int js_tag_url_id = attrs.getAttributeResourceValue(ATTRS_NS,
                 PARAMETER_JS_TAG_URL, -1);
@@ -296,6 +376,11 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
+    /**
+     * Gets the zone id.
+     * 
+     * @return the zone id
+     */
     public Integer getZoneID() {
         return zoneID;
     }
@@ -305,11 +390,18 @@ public class OpenxAdView extends ViewGroup {
      * the widget. This parameter is required unless you use load(int) method.
      * 
      * @param zoneID
+     *            the new zone id
      */
     public void setZoneID(Integer zoneID) {
         this.zoneID = zoneID;
     }
 
+    /**
+     * Sets the zone id.
+     * 
+     * @param attrs
+     *            the new zone id
+     */
     private void setZoneID(AttributeSet attrs) {
         int zone_id_rs = attrs.getAttributeResourceValue(ATTRS_NS,
                 PARAMETER_ZONE_ID, -1);
@@ -324,6 +416,11 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
+    /**
+     * Checks for https.
+     * 
+     * @return true, if successful
+     */
     public boolean hasHTTPS() {
         return hasHTTPS;
     }
@@ -333,11 +430,18 @@ public class OpenxAdView extends ViewGroup {
      * false.
      * 
      * @param hasHTTPS
+     *            the new checks for https
      */
     public void setHasHTTPS(boolean hasHTTPS) {
         this.hasHTTPS = hasHTTPS;
     }
 
+    /**
+     * Sets the checks for https.
+     * 
+     * @param attrs
+     *            the new checks for https
+     */
     private void setHasHTTPS(AttributeSet attrs) {
         int has_https = attrs.getAttributeResourceValue(ATTRS_NS,
                 PARAMETER_HAS_HTTPS, -1);
@@ -349,6 +453,11 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
+    /**
+     * Gets the source.
+     * 
+     * @return the source
+     */
     public String getSource() {
         return source;
     }
@@ -357,11 +466,18 @@ public class OpenxAdView extends ViewGroup {
      * This parameter can be used to target ads by its value. It is optional.
      * 
      * @param source
+     *            the new source
      */
     public void setSource(String source) {
         this.source = source;
     }
 
+    /**
+     * Sets the source.
+     * 
+     * @param attrs
+     *            the new source
+     */
     private void setSource(AttributeSet attrs) {
         int source_id = attrs.getAttributeResourceValue(ATTRS_NS,
                 PARAMETER_SOURCE, -1);
@@ -372,10 +488,21 @@ public class OpenxAdView extends ViewGroup {
         }
     }
 
+    /**
+     * Gets the softgames ad.
+     * 
+     * @return the softgames ad
+     */
     public static SoftgamesAd getSoftgamesAd() {
         return softgamesAd;
     }
 
+    /**
+     * Sets the softgames ad.
+     * 
+     * @param softgamesAd
+     *            the new softgames ad
+     */
     public static void setSoftgamesAd(SoftgamesAd softgamesAd) {
         OpenxAdView.softgamesAd = softgamesAd;
     }

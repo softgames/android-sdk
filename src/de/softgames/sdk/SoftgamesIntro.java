@@ -109,7 +109,7 @@ public class SoftgamesIntro extends Activity {
         Display display = windowManager.getDefaultDisplay();
         SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
                 display.getWidth(), display.getHeight(), density,
-                NetworkUtilities.isConnectedViaWifi(getApplicationContext()));
+                NetworkUtilities.getConnectionType(getApplicationContext()));
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
     }

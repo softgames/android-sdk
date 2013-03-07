@@ -18,7 +18,8 @@ public class SoftgamesAd {
     /** The pixel ratio. */
     private Float pixelRatio;
 
-    private boolean isConnectedViaWifi;
+    /** The connection type. */
+    private int connectionType;
 
     /**
      * Instantiates a new softgames ad.
@@ -31,15 +32,17 @@ public class SoftgamesAd {
      *            the view port height
      * @param pixelRatio
      *            the pixel ratio
+     * @param connectionType
+     *            the type of internet connectivity
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
-            Integer viewPortHeight, Float pixelRatio, boolean isConnectedViaWifi) {
+            Integer viewPortHeight, Float pixelRatio, int connectionType) {
         super();
         this.gameName = gameName;
         this.viewportWidth = viewportWidth;
         this.viewPortHeight = viewPortHeight;
         this.pixelRatio = pixelRatio;
-        this.isConnectedViaWifi = isConnectedViaWifi;
+        this.connectionType = connectionType;
     }
 
 
@@ -119,21 +122,38 @@ public class SoftgamesAd {
         this.pixelRatio = pixelRatio;
     }
 
-    public boolean isConnectedViaWifi() {
-        return isConnectedViaWifi;
+    /**
+     * Gets the connection type.
+     * 
+     * @return the connection type
+     */
+    public int getConnectionType() {
+        return connectionType;
     }
 
-    public void setConnectedViaWifi(boolean isConnectedViaWifi) {
-        this.isConnectedViaWifi = isConnectedViaWifi;
+    /**
+     * Sets the connection type.
+     * 
+     * @param connectionType
+     *            the new connection type
+     */
+    public void setConnectionType(int connectionType) {
+        this.connectionType = connectionType;
     }
 
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
                 + viewportWidth + ", viewPortHeight=" + viewPortHeight
-                + ", pixelRatio=" + pixelRatio + ", isConnectedViaWifi="
-                + isConnectedViaWifi + "]";
+                + ", pixelRatio=" + pixelRatio + ", connectionType="
+                + connectionType + "]";
     }
+
 
 }
