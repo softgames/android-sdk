@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,6 +62,10 @@ public class SoftgamesIntro extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Restore preferences
+        SharedPreferences sgSettings = getSharedPreferences(
+                SGSettings.PREFS_NAME, 0);
 
         // We want to show the splash screen and the ads in full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

@@ -9,6 +9,8 @@ import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
  */
 public final class SGSettings {
 
+    public static final String PREFS_NAME = "SGPrefsFile";
+
     /** The Constant SPLASH_DELAY in seconds. */
     public static final int SPLASH_DELAY = 3;
 

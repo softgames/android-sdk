@@ -8,7 +8,7 @@ package de.softgames.sdk.util;
  *
  */
 public enum NetworkType {
-    UNKNOWN(-1), NONE(0), WIFI(1), EDGE(2), GPRS(3), HSDPA(4);
+    UNKNOWN(-1), NONE(0), GPRS(1), EDGE(2), HSDPA(3), WIFI(4);
 
     private final int value;
     
