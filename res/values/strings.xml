@@ -10,5 +10,7 @@
         <item quantity="one">Failed to register after one attempt</item>
         <item quantity="other">Failed to register after %d attempts</item>
     </plurals>
+    
+    <string name="divider_text">You might also like:</string>
 
 </resources>

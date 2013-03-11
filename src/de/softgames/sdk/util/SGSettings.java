@@ -9,12 +9,18 @@ import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
  */
 public final class SGSettings {
 
+    /** The shared preferences filename */
     public static final String PREFS_NAME = "SGPrefsFile";
+
+    /** The Constant FIRST_SESSION to use as key in the SharedPreferences file. */
+    public static final String FIRST_SESSION = "fisrtSession";
 
     /** The Constant SPLASH_DELAY in seconds. */
     public static final int SPLASH_DELAY = 3;
 
     public static final long AD_DELAY = 5;
+
+    public static final long X_PROMO_DELAY = 5;
 
     /** The launcher activity. */
     public static Class<?> launcherActivity;

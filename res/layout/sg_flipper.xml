@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     
-    <include android:id="@+id/splashScreen" layout="@layout/sg_activity_intro"/>
-    <include android:id="@+id/adsLayout" layout="@layout/sg_activity_ads"/>   
+    <include android:id="@+id/splashScreen" layout="@layout/sg_activity_splash"/>
+    <include android:id="@+id/xpromo" layout="@layout/sg_activity_crosspromotion"/>
+    <include android:id="@+id/adsLayout" layout="@layout/sg_activity_loading"/>   
     
 </ViewFlipper>

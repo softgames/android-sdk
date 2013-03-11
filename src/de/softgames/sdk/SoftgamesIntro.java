@@ -19,9 +19,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
-import de.softgames.sdk.R;
+
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Tracker;
+
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.ui.SoftgamesUI;
@@ -39,9 +41,6 @@ public class SoftgamesIntro extends Activity {
     /** The Constant TAG. */
     private static final String TAG = "SoftgamesIntro";
 
-    /** The Constant FIRST_SESSION to use as key in the SharedPreferences file. */
-    private static final String FIRST_SESSION = "fisrtSession";
-
     /** The number of threads to keep in the pool. */
     private static final int POOL_SIZE = 3;
 
@@ -51,13 +50,23 @@ public class SoftgamesIntro extends Activity {
     /** The launcher activity. */
     private Class<?> launcherActivity = null;
 
-    /** The resources */
+    /** The resources. */
     protected Resources res;
 
-    /** The Flipper to flip between the splash screen and the ads */
+    /** The Flipper to flip between the splash screen and the ads. */
     private ViewFlipper flipper;
 
+    /** The openx custom view. */
     private OpenxAdView adView;
+
+    private GoogleAnalytics mGaInstance;
+
+    private Tracker mTracker;
+    
+    private static final int XPROMO_ID = 1;
+    
+    private static final int LOADING_ID = 2;
+
 
     /*
      * (non-Javadoc)
@@ -72,17 +81,11 @@ public class SoftgamesIntro extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        // Initializes the GA tracker object
+        initGoogleAnalytics();
+
         // Let's initialize the ad related objects
         initOpenxAds();
-
-        // TODO add cross-promotion flow and remove toasts
-        if (isFirstSession()) {
-            Toast.makeText(this, "welcome for the first time",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "welcome back!!", Toast.LENGTH_LONG).show();
-        }
-
 
         setContentView(R.layout.sg_flipper);
         res = getResources();
@@ -90,6 +93,7 @@ public class SoftgamesIntro extends Activity {
 
         // Log info for debug purposes
         adView = (OpenxAdView) findViewById(R.id.adview);
+        // TODO Instantiate a new openx object
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -101,16 +105,28 @@ public class SoftgamesIntro extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showAd();
+                        if (isFirstSession()) {
+                            showLoadingScreen();
+                        } else {
+                            showCrosspromotion();
+                        }
+
                     }
                 });
             }
-
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
-
     }
 
+    /**
+     * Inits the google analytics.
+     */
+    private void initGoogleAnalytics() {
+        // Get the GoogleAnalytics singleton.
+        mGaInstance = GoogleAnalytics.getInstance(this);
 
+        // Use the GoogleAnalytics singleton to get a Tracker.
+        mTracker = mGaInstance.getTracker("UA-39037923-1");
+    }
 
     /**
      * initializes the necessary objects to display ads.
@@ -130,20 +146,53 @@ public class SoftgamesIntro extends Activity {
     }
 
     /**
-     * The ad's layout is requested with its respective banner
-     * 
+     * The ad's layout is requested with its respective banner.
      */
-    private void showAd() {
+    private void showLoadingScreen() {
+        Log.d(TAG, "showLoadingScreen");
         if (SGSettings.isInternetRequired()) {
             requestAd();
         } else {
             startApp();
         }
+    }
 
+    private void showCrosspromotion() {
+        Log.d(TAG, "showCrosspromotion");
+        if (SGSettings.isInternetRequired()) {
+            if (!NetworkUtilities.isOnline(this)) {
+                buildRetryConnectionDialog();
+            } else {
+                try {
+                    // adView.load();
+                    // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
+                    flipper.setDisplayedChild(XPROMO_ID);
+
+                    // Thread to show the ads during the given seconds
+                    scheduleTaskExecutor.schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    showLoadingScreen();
+                                }
+                            });
+                        }
+                    }, SGSettings.X_PROMO_DELAY, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            }
+        } else {
+            startApp();
+        }
     }
 
     /**
-     * The activity set as
+     * The activity set as.
+     * 
      * {@link de.softgames.sdk.util.SGSettings#launcherActivity
      * launcherActivity} is started
      */
@@ -161,12 +210,11 @@ public class SoftgamesIntro extends Activity {
         } catch (Exception e) {
             Log.e(TAG, "An error ocurred while starting the given activity.");
         }
-
         finish();
     }
 
     /**
-     * Requests an ad and displays it during the given seconds
+     * Requests an ad and displays it during the given seconds.
      */
     private void requestAd() {
         Log.d(TAG, "requestAd()");
@@ -176,9 +224,9 @@ public class SoftgamesIntro extends Activity {
         } else {
             try {
                 adView.load();
-                Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
+                // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
                 // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
-                flipper.showNext();
+                flipper.setDisplayedChild(LOADING_ID);
 
                 // Thread to show the ads during the given seconds
                 scheduleTaskExecutor.schedule(new Runnable() {
@@ -191,7 +239,6 @@ public class SoftgamesIntro extends Activity {
                 Log.e(TAG, "error", e);
             }
         }
-
     }
 
     /*
@@ -208,8 +255,6 @@ public class SoftgamesIntro extends Activity {
     /**
      * Builds the retry connection dialog.
      * 
-     * @param ctx
-     *            the context
      */
     public void buildRetryConnectionDialog() {
         Log.d(TAG, "buildRetryConnectionDialog()");
@@ -249,12 +294,13 @@ public class SoftgamesIntro extends Activity {
             SharedPreferences sgSettings = getSharedPreferences(
                     SGSettings.PREFS_NAME, 0);
 
-            boolean firstSession = sgSettings.getBoolean(FIRST_SESSION, true);
+            boolean firstSession = sgSettings.getBoolean(
+                    SGSettings.FIRST_SESSION, true);
 
             if (firstSession) {
                 Log.d(TAG, "This is the first session");
                 SharedPreferences.Editor editor = sgSettings.edit();
-                editor.putBoolean(FIRST_SESSION, false);
+                editor.putBoolean(SGSettings.FIRST_SESSION, false);
                 editor.commit();
                 return true;
             } else {
@@ -266,5 +312,20 @@ public class SoftgamesIntro extends Activity {
             return true;
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mTracker.sendView("/SoftgamesIntro");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    // private View getNext(int next) {
+    // return null;
+    // }
 
 }

@@ -16,7 +16,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * This class implements a widget for Android applications to display ads with
  * the help of OpenX Ad Server.
