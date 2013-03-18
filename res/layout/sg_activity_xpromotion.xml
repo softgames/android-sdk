@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
+    android:id="@+id/xpromo"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/sg_bg_xpromo"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/teaser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/sg_xpromo_teaser" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/sg_bg_darktransparent"
+            android:gravity="center_vertical"
+            android:padding="10dp" >
+
+            <TextView
+                android:id="@+id/text_teaser_text"
+                style="@style/SGText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/current_game_name" />
+
+            <Button
+                android:id="@+id/button_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/sg_button_play" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/container_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sg_gradient_divider"
+        android:orientation="vertical" >
+
+        <View
+            android:id="@+id/first_divider"
+            style="@style/Divider"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/divider_text"
+            style="@style/SGText"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="@string/divider_text" />
+
+        <View
+            android:id="@+id/second_divider"
+            style="@style/Divider"
+            android:layout_width="match_parent" />
+	</LinearLayout>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="fill_parent"    
+	    android:orientation="vertical"
+	    android:gravity="top">
+	    <de.softgames.sdk.OpenxAdView
+	        android:id="@+id/adview_xpromo"
+	        android:layout_width="match_parent"
+	        android:layout_height="fill_parent"
+	        ox:js_tag_url="afr.php"
+	        ox:template="CLEAN"
+	        ox:zone_id="@string/zoneXpromoId" 
+	        android:layout_gravity="top|center_horizontal"/>
+	</LinearLayout>
+</LinearLayout>

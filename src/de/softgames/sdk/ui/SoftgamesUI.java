@@ -13,7 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import de.softgames.sdk.R;
 import de.softgames.sdk.model.SoftgamesNotification;
 import de.softgames.sdk.util.SGSettings;
@@ -25,11 +30,27 @@ import de.softgames.sdk.util.SGSettings;
  */
 public final class SoftgamesUI {
 
-    private static final String TAG = "SoftgamesUI";
+    /** The Constant TAG. */
+    private static final String TAG = SoftgamesUI.class.getSimpleName();
+
+    /** The launcher activity. */
     private static Class<?> launcherActivity;
+
+    /** The message id. */
     private static int messageId = 0;
+
+    /** The res. */
     private static Resources res;
 
+    /**
+     * Generate a custom notification with the info received from our
+     * notifications web tool(AKA uhura).
+     * 
+     * @param context
+     *            the context
+     * @param intent
+     *            the intent
+     */
     public static void generateSGNotification(Context context, Intent intent) {
         String message = intent.getStringExtra("message");
         String title = intent.getStringExtra("title");
@@ -40,9 +61,15 @@ public final class SoftgamesUI {
         generateNotification(context, softgamesNotification);
     }
 
+    /**
+     * Generate test notification.
+     * 
+     * @param context
+     *            the context
+     */
     public static void generateTestNotification(Context context) {
-        String message = "Test title";
-        String title = "test";
+        String message = "Test Message";
+        String title = "Foo Bar";
 
         SoftgamesNotification softgamesNotification = new SoftgamesNotification(
                 title, message);
@@ -70,13 +97,15 @@ public final class SoftgamesUI {
         String title = sgNotification.getTitle();
         String message = sgNotification.getMessage();
 
-        Log.v(TAG, "Received message: " + title);
+        Log.d(TAG, "Received message: " + title);
 
-        Bitmap largeNotificationIcon = createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
+        // Bitmap largeNotificationIcon =
+        // createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
+        // TODO Determine how is gonna be set the large icon
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 context).setSmallIcon(R.drawable.sg_ic_notify_msg)
-                .setLargeIcon(largeNotificationIcon).setContentText(message)
+                .setContentText(message)
                 .setContentTitle(title);
 
         // Creates an explicit intent for an Activity in your app
@@ -109,6 +138,7 @@ public final class SoftgamesUI {
      *            the sg_ic_notify_msg
      * @return the bitmap
      */
+    @SuppressWarnings("unused")
     private static Bitmap createLargeIconBitmap(int sg_ic_notify_msg) {
 
         if (res != null) {
@@ -130,7 +160,52 @@ public final class SoftgamesUI {
             Log.e(TAG, "The res variable is not initialized");
             return null;
         }
+    }
 
+    /**
+     * Gets the current device screen density
+     * 
+     * @param an
+     *            instance of WindowManager
+     * @return a float with the value of the screen's density
+     */
+    public static float getScreenDensity(WindowManager manager) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(metrics);
+        float screenDensity = metrics.density;
+        return screenDensity;
+    }
+
+    /**
+     * Animation object coming from the right side
+     * 
+     * @return Animation object
+     */
+    public static Animation inFromRightAnimation() {
+        Animation inFromRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(250);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
+    }
+
+    /**
+     * out Animation to the left
+     * 
+     * @return
+     */
+    public static Animation outToLeftAnimation() {
+        Animation outToLeft = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outToLeft.setDuration(250);
+        outToLeft.setInterpolator(new AccelerateInterpolator());
+        return outToLeft;
     }
 
 }

@@ -2,13 +2,13 @@
     package="de.softgames.sdk"
     android:versionCode="1"
     android:versionName="0.0.1" >
-
+    
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
     
     <application >
-        <activity android:name=".SoftgamesIntro" android:label="@string/sg_app_name"
+        <activity android:name="de.softgames.sdk.SoftgamesIntro" android:label="@string/sg_app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">
             
