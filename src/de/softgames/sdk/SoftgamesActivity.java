@@ -15,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,10 +41,10 @@ import de.softgames.sdk.util.SGSettings;
  * 
  * @author rolandcastillo
  */
-public class SoftgamesIntro extends Activity implements OnClickListener {
+public class SoftgamesActivity extends Activity implements OnClickListener {
 
     /** The Constant TAG. */
-    private static final String TAG = SoftgamesIntro.class.getSimpleName();
+    private static final String TAG = SoftgamesActivity.class.getSimpleName();
 
     /** The number of threads to keep in the pool. */
     private static final int POOL_SIZE = 3;

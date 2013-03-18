@@ -7,7 +7,6 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -255,26 +254,6 @@ public class OpenxAdView extends ViewGroup {
         }
 
         return null;
-    }
-
-    @Deprecated
-    protected String getFormattedURL(int zoneID) {
-        Log.d(LOGTAG, "getFormattedURL() zoneID: " + zoneID);
-        try {
-            String zoneTag = String.format(URL, (hasHTTPS ? "https://"
-                    : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
-                    source == null ? "" : URLEncoder.encode(source, "utf-8"),
-                    prng.nextLong(), softgamesAd.getViewportWidth(),
-                    softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
-                    softgamesAd.getViewportHeight(),
-                    softgamesAd.getConnectionType());
-            return zoneTag;
-
-        } catch (UnsupportedEncodingException e) {
-            Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
-            return null;
-        }
-
     }
 
     /*
