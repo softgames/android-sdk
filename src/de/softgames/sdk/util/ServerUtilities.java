@@ -26,7 +26,7 @@ public final class ServerUtilities {
     public static final int MAX_ATTEMPTS = 6;
     private static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final Random random = new Random();
-    private static final String TAG = "ServerUtilities";
+    private static final String TAG = ServerUtilities.class.getSimpleName();
 
     /**
      * Register this account/device pair within the server.

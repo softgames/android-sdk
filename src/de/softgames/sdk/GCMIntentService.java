@@ -19,7 +19,7 @@ import de.softgames.sdk.util.ServerUtilities;
 public class GCMIntentService extends GCMBaseIntentService {
 
     /** The Constant TAG. */
-    private static final String TAG = "GCMIntentService";
+    private static final String TAG = GCMIntentService.class.getSimpleName();
 
     /**
      * Instantiates a new GCM intent service.

@@ -4,16 +4,19 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
 
-import de.softgames.sdk.model.SoftgamesAd;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import de.softgames.sdk.model.SoftgamesAd;
+import de.softgames.sdk.util.CleanTemplate;
+import de.softgames.sdk.util.LoadingScreenTemplate;
+import de.softgames.sdk.util.TemplateContext;
 
 
 /**
@@ -67,7 +70,7 @@ public class OpenxAdView extends ViewGroup {
     private static final String ATTRS_NS = "http://softgames.de/schemas/android/openx/0.1";
 
     /** The Constant LOGTAG. */
-    private static final String LOGTAG = "OpenxAdView";
+    private static final String LOGTAG = OpenxAdView.class.getSimpleName();
 
     /** The Constant DELIVERY_URL. */
     private static final String DELIVERY_URL = "87.230.102.59:82/openx/www/delivery";
@@ -83,26 +86,24 @@ public class OpenxAdView extends ViewGroup {
 
     /** The Constant PARAMETER_SOURCE. */
     private static final String PARAMETER_SOURCE = "source";
-    // We need to declare a variable with the 100% value since the parser does
-    // not accept the percent sign
-    /** The Constant IMG_WIDTH. */
-    private static final String IMG_WIDTH = "100%";
 
-    /** The Constant HTML_DOCUMENT_TEMPLATE. */
-    private static final String HTML_DOCUMENT_TEMPLATE = "<html><head>"
-            + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"
-            + "<style>* {padding: 0px; margin: 0px; background-color: transparent;}"
-            + "body,html,#container{height:%4$s;}"
-            + "#container{width:%4$s;position: relative;}img{width: %4$s;position: absolute;top: 0;left: 0;right:0;bottom:0;margin: auto;}</style>"
-            + "</head>\n<body><div style=\"display:table;height:%4$s;width:%4$s;\">%3$s</div>"
-            + "</pre></body></html>";
+    private static final String PARAMETER_TEMPLATE = "template";
 
     /** The Constant JS_TAG. */
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
             + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
-            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;charset=UTF-8"
+            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;"
             + "charset=UTF-8&amp;source=%3$s'></script>";
+
+    private static final String URL = "%1$s?zoneid=%2$d&amp;"
+            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
+            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;"
+            + "charset=UTF-8&amp;source=%3$s";
+
+
+    /** The softgames ad. */
+    private static SoftgamesAd softgamesAd;
 
     /** The web view. */
     private WebView webView;
@@ -110,7 +111,7 @@ public class OpenxAdView extends ViewGroup {
     /** The delivery url. */
     private String deliveryURL;
 
-    /** The js tag url. */
+    /** The js tag url initialized with the default value. */
     private String jsTagURL = "ajs.php";
 
     /** The zone id. */
@@ -122,14 +123,15 @@ public class OpenxAdView extends ViewGroup {
     /** The source. */
     private String source;
 
+    private String template = SGTemplate.CLEAN.getValue();
+
     /** The prng. */
     private Random prng = new Random();
 
     /** The res. */
     private Resources res;
 
-    /** The softgames ad. */
-    private static SoftgamesAd softgamesAd;
+    private TemplateContext templateContext = new TemplateContext();
 
 
     /**
@@ -140,7 +142,6 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context) {
         super(context);
-        Log.d(LOGTAG, "constructor 1");
         this.res = context.getResources();
         this.webView = new WebView(context);
         initWebView();
@@ -194,7 +195,9 @@ public class OpenxAdView extends ViewGroup {
         setZoneID(attrs);
         setHasHTTPS(attrs);
         setSource(attrs);
+        setTemplate(attrs);
     }
+
 
     /**
      * Inits the web view.
@@ -211,7 +214,7 @@ public class OpenxAdView extends ViewGroup {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new OpenXAdWebChromeClient());
-        webView.setTag("openxWebView");
+
         // TODO remove for production
         webView.clearCache(true);
         addView(webView);
@@ -225,9 +228,9 @@ public class OpenxAdView extends ViewGroup {
      * @return the zone template
      */
     protected String getZoneTemplate(int zoneID) {
-
+        Log.d(LOGTAG, "getZoneTemplate() zoneID: " + zoneID);
         try {
-            String zoneTag = String.format(JS_TAG,
+            String zoneTag = String.format(URL,
                     (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
@@ -236,15 +239,42 @@ public class OpenxAdView extends ViewGroup {
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType());
 
-            String raw = String.format(HTML_DOCUMENT_TEMPLATE,
-                    softgamesAd.getViewportWidth(),
-                    softgamesAd.getViewportHeight(), zoneTag, IMG_WIDTH);
-            return raw;
+            SGTemplate sgTemplate = SGTemplate.valueOf(template);
+
+            switch (sgTemplate) {
+            case LOADING_SCREEN:
+                templateContext.setTemplateStratgy(new LoadingScreenTemplate());
+                return templateContext.getTemplate(zoneTag);
+            default:
+                templateContext.setTemplateStratgy(new CleanTemplate());
+                return templateContext.getTemplate(zoneTag);
+            }
+
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
         }
 
         return null;
+    }
+
+    @Deprecated
+    protected String getFormattedURL(int zoneID) {
+        Log.d(LOGTAG, "getFormattedURL() zoneID: " + zoneID);
+        try {
+            String zoneTag = String.format(URL, (hasHTTPS ? "https://"
+                    : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
+                    source == null ? "" : URLEncoder.encode(source, "utf-8"),
+                    prng.nextLong(), softgamesAd.getViewportWidth(),
+                    softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
+                    softgamesAd.getViewportHeight(),
+                    softgamesAd.getConnectionType());
+            return zoneTag;
+
+        } catch (UnsupportedEncodingException e) {
+            Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
+            return null;
+        }
+
     }
 
     /*
@@ -293,7 +323,7 @@ public class OpenxAdView extends ViewGroup {
      * @see #load()
      */
     public void load(int zoneID) {
-        Log.d(LOGTAG, "loadUrl with zoneID");
+        Log.d(LOGTAG, "loadUrl with zoneID: " + zoneID);
         // check required parameters
         if (deliveryURL != null) {
             webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID),
@@ -302,6 +332,7 @@ public class OpenxAdView extends ViewGroup {
             Log.w(LOGTAG, "deliveryURL is empty");
         }
     }
+
 
     /**
      * Gets the delivery url.
@@ -384,6 +415,14 @@ public class OpenxAdView extends ViewGroup {
         return zoneID;
     }
 
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
     /**
      * The ID of OpenX zone from which ads should be selected to display inside
      * the widget. This parameter is required unless you use load(int) method.
@@ -411,6 +450,20 @@ public class OpenxAdView extends ViewGroup {
                     PARAMETER_ZONE_ID, -1);
             if (zone_id != -1) {
                 this.zoneID = Integer.valueOf(zone_id);
+            }
+        }
+    }
+
+    private void setTemplate(AttributeSet attrs) {
+        int template_rs = attrs.getAttributeResourceValue(ATTRS_NS,
+                PARAMETER_TEMPLATE, -1);
+        if (template_rs != -1) {
+            this.template = res.getString(template_rs);
+        } else {
+            String html_template = attrs.getAttributeValue(ATTRS_NS,
+                    PARAMETER_TEMPLATE);
+            if (html_template != null) {
+                this.template = html_template;
             }
         }
     }

@@ -15,10 +15,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -36,10 +42,10 @@ import de.softgames.sdk.util.SGSettings;
  * 
  * @author rolandcastillo
  */
-public class SoftgamesIntro extends Activity {
+public class SoftgamesIntro extends Activity implements OnClickListener {
 
     /** The Constant TAG. */
-    private static final String TAG = "SoftgamesIntro";
+    private static final String TAG = SoftgamesIntro.class.getSimpleName();
 
     /** The number of threads to keep in the pool. */
     private static final int POOL_SIZE = 3;
@@ -57,15 +63,23 @@ public class SoftgamesIntro extends Activity {
     private ViewFlipper flipper;
 
     /** The openx custom view. */
-    private OpenxAdView adView;
+    private OpenxAdView loadingScreenAdView;
 
+    private OpenxAdView crossPromoAdView;
+
+    private Button buttonPlay;
+
+    /** The google analytics instance. */
     private GoogleAnalytics mGaInstance;
 
+    /** The m tracker. */
     private Tracker mTracker;
     
-    private static final int XPROMO_ID = 1;
+    /** The Constant XPROMO_SCREEN_ID. */
+    private static final int XPROMO_SCREEN_ID = 1;
     
-    private static final int LOADING_ID = 2;
+    /** The Constant LOADING_SCREEN_ID. */
+    private static final int LOADING_SCREEN_ID = 2;
 
 
     /*
@@ -92,8 +106,22 @@ public class SoftgamesIntro extends Activity {
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
 
         // Log info for debug purposes
-        adView = (OpenxAdView) findViewById(R.id.adview);
-        // TODO Instantiate a new openx object
+        loadingScreenAdView = (OpenxAdView) findViewById(R.id.adview);
+        // crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
+
+        buttonPlay = (Button) findViewById(R.id.button_play);
+
+        // Custom type face
+        TextView xpromoDividerText = (TextView) findViewById(R.id.divider_text);
+        TextView teaserGameName = (TextView) findViewById(R.id.text_teaser_text);
+        try {
+            Typeface typeface = Typeface.createFromAsset(getAssets(),
+                    "oswald.ttf");
+            xpromoDividerText.setTypeface(typeface);
+            teaserGameName.setTypeface(typeface, 1);
+        } catch (Exception e) {
+            Log.e(TAG, "The font oswald_bold is missing from the assets folder");
+        }
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
@@ -108,6 +136,7 @@ public class SoftgamesIntro extends Activity {
                         if (isFirstSession()) {
                             showLoadingScreen();
                         } else {
+                            crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
                             showCrosspromotion();
                         }
 
@@ -115,6 +144,9 @@ public class SoftgamesIntro extends Activity {
                 });
             }
         }, SGSettings.SPLASH_DELAY, TimeUnit.SECONDS);
+
+        buttonPlay.setOnClickListener(this);
+
     }
 
     /**
@@ -149,7 +181,6 @@ public class SoftgamesIntro extends Activity {
      * The ad's layout is requested with its respective banner.
      */
     private void showLoadingScreen() {
-        Log.d(TAG, "showLoadingScreen");
         if (SGSettings.isInternetRequired()) {
             requestAd();
         } else {
@@ -157,30 +188,24 @@ public class SoftgamesIntro extends Activity {
         }
     }
 
+    /**
+     * Shows the screen with the cross promotion from openx.
+     */
     private void showCrosspromotion() {
-        Log.d(TAG, "showCrosspromotion");
+
         if (SGSettings.isInternetRequired()) {
             if (!NetworkUtilities.isOnline(this)) {
                 buildRetryConnectionDialog();
             } else {
                 try {
-                    // adView.load();
+                    crossPromoAdView.load();
+                    crossPromoAdView.setOnClickListener(this);
+                    Log.e(TAG, crossPromoAdView
+                            .getZoneTemplate(crossPromoAdView.getZoneID()));
                     // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
-                    flipper.setDisplayedChild(XPROMO_ID);
+                    flipper.setDisplayedChild(XPROMO_SCREEN_ID);
+                    mTracker.sendView("/CrossPromotionPage");
 
-                    // Thread to show the ads during the given seconds
-                    scheduleTaskExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    showLoadingScreen();
-                                }
-                            });
-                        }
-                    }, SGSettings.X_PROMO_DELAY, TimeUnit.SECONDS);
                 } catch (Exception e) {
                     Log.e(TAG, "error", e);
                 }
@@ -217,17 +242,17 @@ public class SoftgamesIntro extends Activity {
      * Requests an ad and displays it during the given seconds.
      */
     private void requestAd() {
-        Log.d(TAG, "requestAd()");
         long adDelay = SGSettings.AD_DELAY;
         if (!NetworkUtilities.isOnline(this)) {
             buildRetryConnectionDialog();
         } else {
             try {
-                adView.load();
-                // Log.e(TAG, adView.getZoneTemplate(adView.getZoneID()));
+                loadingScreenAdView.load();
+                Log.e(TAG, loadingScreenAdView
+                        .getZoneTemplate(loadingScreenAdView.getZoneID()));
                 // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
-                flipper.setDisplayedChild(LOADING_ID);
-
+                flipper.setDisplayedChild(LOADING_SCREEN_ID);
+                mTracker.sendView("/LoadingScreen");
                 // Thread to show the ads during the given seconds
                 scheduleTaskExecutor.schedule(new Runnable() {
                     @Override
@@ -236,7 +261,7 @@ public class SoftgamesIntro extends Activity {
                     }
                 }, adDelay, TimeUnit.SECONDS);
             } catch (Exception e) {
-                Log.e(TAG, "error", e);
+                Log.e(TAG, "error requesting ad", e);
             }
         }
     }
@@ -298,13 +323,12 @@ public class SoftgamesIntro extends Activity {
                     SGSettings.FIRST_SESSION, true);
 
             if (firstSession) {
-                Log.d(TAG, "This is the first session");
+                Log.d(TAG, "This is the very first session");
                 SharedPreferences.Editor editor = sgSettings.edit();
                 editor.putBoolean(SGSettings.FIRST_SESSION, false);
                 editor.commit();
                 return true;
             } else {
-                Log.d(TAG, "This is an old user");
                 return false;
             }
         } catch (Exception e) {
@@ -324,8 +348,13 @@ public class SoftgamesIntro extends Activity {
         super.onStop();
     }
 
-    // private View getNext(int next) {
-    // return null;
-    // }
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_play) {
+            showLoadingScreen();
+        } else if (v.getId() == R.id.adview_xpromo) {
+            mTracker.sendView("/xpromo_clicked");
+        }
+    }
 
 }

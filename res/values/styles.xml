@@ -12,9 +12,20 @@
         -->
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <!-- Softgames theme. -->
+    <style name="SGText">
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">-1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>        
+    </style>
+    
+    <style name="Divider">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#5B6065</item>
+       
     </style>
 
 </resources>

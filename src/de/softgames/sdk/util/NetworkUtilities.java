@@ -13,7 +13,7 @@ import android.util.Log;
  */
 public class NetworkUtilities {
 
-    private static final String TAG = "CheckNetwork";
+    private static final String TAG = NetworkUtilities.class.getSimpleName();
 
     private static ConnectivityManager connManager;
 

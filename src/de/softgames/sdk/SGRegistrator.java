@@ -17,7 +17,7 @@ import de.softgames.sdk.util.ServerUtilities;
 public class SGRegistrator {
 
     /** The Constant TAG. */
-    private static final String TAG = "SGRegistrator";
+    private static final String TAG = SGRegistrator.class.getSimpleName();
 
     /** The application context. */
     private Context ctx;

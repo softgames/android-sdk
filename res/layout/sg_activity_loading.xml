@@ -5,13 +5,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"    
     android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:background="#000000">
+    android:gravity="center"
+    android:background="#fff">
             
     <de.softgames.sdk.OpenxAdView
            android:id="@+id/adview"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"           
-           ox:zone_id="@string/zoneId" />
+           android:layout_height="fill_parent"
+           android:layout_gravity="center_vertical|center_horizontal"           
+           ox:zone_id="@string/zoneLoadingId" 
+           ox:template="CLEAN"
+           ox:js_tag_url="afr.php"/>
     
 </LinearLayout>

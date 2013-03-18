@@ -31,7 +31,7 @@ import de.softgames.sdk.util.SGSettings;
 public final class SoftgamesUI {
 
     /** The Constant TAG. */
-    private static final String TAG = "SoftgamesUI";
+    private static final String TAG = SoftgamesUI.class.getSimpleName();
 
     /** The launcher activity. */
     private static Class<?> launcherActivity;
