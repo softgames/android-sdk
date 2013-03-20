@@ -1,3 +1,5 @@
+# Guide to the Softgames SDK
+
 _This page describes the Softgames SDK functionality and usage._
 
 ## Introduction 
