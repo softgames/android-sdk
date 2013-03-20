@@ -3,11 +3,11 @@ package de.softgames.sdk;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.util.CleanTemplate;
+import de.softgames.sdk.util.DownloadHtmlTask;
 import de.softgames.sdk.util.LoadingScreenTemplate;
 import de.softgames.sdk.util.TemplateContext;
 
@@ -101,12 +102,17 @@ public class OpenxAdView extends ViewGroup {
             + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;"
             + "charset=UTF-8&amp;source=%3$s";
 
+    private static final String URL_PLAIN = "%1$s?zoneid=%2$d&"
+            + "viewport_width=%5$s&pixelratio=%6$s&gamename=%7$s&"
+            + "viewport_height=%8$s&conn_type=%9$s&cb=%4$d&"
+            + "charset=UTF-8&source=%3$s";
+
 
     /** The softgames ad. */
     private static SoftgamesAd softgamesAd;
 
     /** The web view. */
-    private WebView webView;
+    public WebView webView;
 
     /** The delivery url. */
     private String deliveryURL;
@@ -214,7 +220,6 @@ public class OpenxAdView extends ViewGroup {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new OpenXAdWebChromeClient());
-
         // TODO remove for production
         webView.clearCache(true);
         addView(webView);
@@ -227,11 +232,12 @@ public class OpenxAdView extends ViewGroup {
      *            the zone id
      * @return the zone template
      */
+    @Deprecated
     protected String getZoneTemplate(int zoneID) {
         Log.d(LOGTAG, "getZoneTemplate() zoneID: " + zoneID);
+
         try {
-            String zoneTag = String.format(URL,
-                    (hasHTTPS ? "https://"
+            String zoneTag = String.format(URL, (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
@@ -248,6 +254,7 @@ public class OpenxAdView extends ViewGroup {
             default:
                 templateContext.setTemplateStratgy(new CleanTemplate());
                 return templateContext.getTemplate(zoneTag);
+
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -257,24 +264,31 @@ public class OpenxAdView extends ViewGroup {
         return null;
     }
 
-    @Deprecated
-    protected String getFormattedURL(int zoneID) {
-        Log.d(LOGTAG, "getFormattedURL() zoneID: " + zoneID);
+    protected String getZoneTemplateHtml(int zoneID) {
+        Log.d(LOGTAG, "getZoneTemplateHtml() zoneID: " + zoneID);
+        String openxHtml = "";
+        DownloadHtmlTask htmlTask = new DownloadHtmlTask();
         try {
-            String zoneTag = String.format(URL, (hasHTTPS ? "https://"
+            String zoneTag = String.format(URL_PLAIN,
+                    (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType());
-            return zoneTag;
+
+            openxHtml = htmlTask.execute(zoneTag).get();
 
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
-            return null;
+        } catch (InterruptedException e) {
+            Log.e(LOGTAG, "", e);
+        } catch (ExecutionException e) {
+            Log.e(LOGTAG, "", e);
         }
 
+        return openxHtml;
     }
 
     /*
@@ -296,7 +310,7 @@ public class OpenxAdView extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        // If you do not want load the ad manually comment this line out
+        // If you do not want to load the ad manually comment this line out
         // load();
     }
 
@@ -326,7 +340,9 @@ public class OpenxAdView extends ViewGroup {
         Log.d(LOGTAG, "loadUrl with zoneID: " + zoneID);
         // check required parameters
         if (deliveryURL != null) {
-            webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID),
+            // webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID),
+            // "text/html", "utf-8", null);
+            webView.loadDataWithBaseURL(null, getZoneTemplateHtml(zoneID),
                     "text/html", "utf-8", null);
         } else {
             Log.w(LOGTAG, "deliveryURL is empty");
@@ -559,5 +575,12 @@ public class OpenxAdView extends ViewGroup {
         OpenxAdView.softgamesAd = softgamesAd;
     }
 
+    public WebView getWebView() {
+        return webView;
+    }
+
+    public void setWebView(WebView webView) {
+        this.webView = webView;
+    }
 
 }

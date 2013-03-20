@@ -19,15 +19,15 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1.0</item>
         <item name="android:textColor">#fff</item>
-        <item name="android:textSize">18sp</item>        
+        <item name="android:textSize">22sp</item>        
     </style>
     <style name="SGText.divider">
-           <item name="android:paddingTop">12dp</item>
-           <item name="android:paddingBottom">12dp</item>
+           <item name="android:paddingTop">14dp</item>
+           <item name="android:paddingBottom">14dp</item>
     </style>
     
     <style name="Divider">
-        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:background">#5B6065</item>
        
     </style>
