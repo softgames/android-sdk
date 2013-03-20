@@ -104,9 +104,9 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
 
-        // Log info for debug purposes
+        // The Openx ads are instantiated
         loadingScreenAdView = (OpenxAdView) findViewById(R.id.adview);
-        // crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
+        crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
 
         buttonPlay = (Button) findViewById(R.id.button_play);
 
@@ -135,7 +135,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                         if (isFirstSession()) {
                             showLoadingScreen();
                         } else {
-                            crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
+                            // crossPromoAdView = (OpenxAdView)
+                            // findViewById(R.id.adview_xpromo);
                             showCrosspromotion();
                         }
 
@@ -198,9 +199,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
             } else {
                 try {
                     crossPromoAdView.load();
-                    crossPromoAdView.setOnClickListener(this);
-                    Log.e(TAG, crossPromoAdView
-                            .getZoneTemplate(crossPromoAdView.getZoneID()));
                     // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                     flipper.setDisplayedChild(XPROMO_SCREEN_ID);
                     mTracker.sendView("/CrossPromotionPage");
@@ -247,8 +245,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         } else {
             try {
                 loadingScreenAdView.load();
-                Log.e(TAG, loadingScreenAdView
-                        .getZoneTemplate(loadingScreenAdView.getZoneID()));
                 // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                 flipper.setDisplayedChild(LOADING_SCREEN_ID);
                 mTracker.sendView("/LoadingScreen");
@@ -339,7 +335,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        mTracker.sendView("/SoftgamesIntro");
+        mTracker.sendView("/SoftgamesActivity");
     }
 
     @Override
@@ -351,8 +347,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.button_play) {
             showLoadingScreen();
-        } else if (v.getId() == R.id.adview_xpromo) {
-            mTracker.sendView("/xpromo_clicked");
         }
     }
 

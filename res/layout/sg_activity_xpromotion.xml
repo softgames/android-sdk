@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@drawable/sg_bg_darktransparent"
-            android:gravity="center_vertical"
             android:padding="10dp" >
 
             <TextView
@@ -33,6 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_alignBaseline="@+id/button_play"
+                android:gravity="center_vertical"
                 android:text="@string/current_game_name" />
 
             <Button
@@ -58,9 +59,9 @@
 
         <TextView
             android:id="@+id/divider_text"
-            style="@style/SGText"
+            style="@style/SGText.divider"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/divider_text" />
 
