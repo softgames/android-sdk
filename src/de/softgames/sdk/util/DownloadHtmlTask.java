@@ -50,9 +50,10 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
                     inputStream, "utf8"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
-            while ((line = reader.readLine()) != null)
+            while ((line = reader.readLine()) != null) {
                 // Read line by line
                 sb.append(line);
+            }
 
             resString = sb.toString(); // Result is here
 
