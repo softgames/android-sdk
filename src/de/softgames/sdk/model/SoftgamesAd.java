@@ -21,6 +21,8 @@ public class SoftgamesAd {
     /** The connection type. */
     private int connectionType;
 
+    private String deviceManufacturer;
+
     /**
      * Instantiates a new softgames ad.
      * 
@@ -36,13 +38,15 @@ public class SoftgamesAd {
      *            the type of internet connectivity
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
-            Integer viewPortHeight, Float pixelRatio, int connectionType) {
+            Integer viewPortHeight, Float pixelRatio, int connectionType,
+            String deviceManufacturer) {
         super();
         this.gameName = gameName;
         this.viewportWidth = viewportWidth;
         this.viewPortHeight = viewPortHeight;
         this.pixelRatio = pixelRatio;
         this.connectionType = connectionType;
+        this.deviceManufacturer = deviceManufacturer;
     }
 
 
@@ -142,17 +146,21 @@ public class SoftgamesAd {
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
+    public String getDeviceManufacturer() {
+        return deviceManufacturer;
+    }
+
+    public void setDeviceManufacturer(String deviceManufacturer) {
+        this.deviceManufacturer = deviceManufacturer;
+    }
+
     @Override
     public String toString() {
         return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
                 + viewportWidth + ", viewPortHeight=" + viewPortHeight
                 + ", pixelRatio=" + pixelRatio + ", connectionType="
-                + connectionType + "]";
+                + connectionType + ", deviceManufacturer=" + deviceManufacturer
+                + "]";
     }
 
 

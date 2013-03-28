@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -169,10 +170,13 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         // The density is gather in order to determine the pixel ratio
         Float density = SoftgamesUI.getScreenDensity(windowManager);
 
+        String packageName = getApplicationContext().getPackageName();
         Display display = windowManager.getDefaultDisplay();
-        SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
+
+        SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
                 display.getWidth(), display.getHeight(), density,
-                NetworkUtilities.getConnectionType(getApplicationContext()));
+                NetworkUtilities.getConnectionType(getApplicationContext()),
+                Build.MANUFACTURER);
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
     }
@@ -244,7 +248,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
             buildRetryConnectionDialog();
         } else {
             try {
-                loadingScreenAdView.load();
+                loadingScreenAdView.loadInIframe();
                 // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
                 flipper.setDisplayedChild(LOADING_SCREEN_ID);
                 mTracker.sendView("/LoadingScreen");

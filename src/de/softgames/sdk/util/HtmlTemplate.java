@@ -4,7 +4,7 @@ package de.softgames.sdk.util;
 import de.softgames.sdk.interfaces.TemplateStrategy;
 
 
-public class LoadingScreenTemplate implements TemplateStrategy {
+public class HtmlTemplate implements TemplateStrategy {
 
     /** The Constant HTML_DOCUMENT_TEMPLATE. */
     private static final String HTML_DOCUMENT_TEMPLATE = "<html class=\"loadingScreen\"><head>"

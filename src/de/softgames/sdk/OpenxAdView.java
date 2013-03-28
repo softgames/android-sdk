@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import de.softgames.sdk.model.SoftgamesAd;
-import de.softgames.sdk.util.CleanTemplate;
+import de.softgames.sdk.util.IframeTemplate;
 import de.softgames.sdk.util.DownloadHtmlTask;
-import de.softgames.sdk.util.LoadingScreenTemplate;
+import de.softgames.sdk.util.HtmlTemplate;
 import de.softgames.sdk.util.TemplateContext;
 
 
@@ -90,22 +90,24 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String PARAMETER_TEMPLATE = "template";
 
-    /** The Constant JS_TAG. */
+    /** The Constant JS_TAG. used by the script type ajs.php */
+    @SuppressWarnings("unused")
     private static final String JS_TAG = ""
             + "<script type='text/javascript' src='%1$s?zoneid=%2$d&amp;"
             + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
-            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;"
+            + "viewport_height=%8$s&amp;conn_type=%9$s&manufacturer=%10$s&amp;cb=%4$d&amp;"
             + "charset=UTF-8&amp;source=%3$s'></script>";
-
-    private static final String URL = "%1$s?zoneid=%2$d&amp;"
-            + "viewport_width=%5$s&amp;pixelratio=%6$s&amp;gamename=%7$s&amp;"
-            + "viewport_height=%8$s&amp;conn_type=%9$s&amp;cb=%4$d&amp;"
-            + "charset=UTF-8&amp;source=%3$s";
 
     private static final String URL_PLAIN = "%1$s?zoneid=%2$d&"
             + "viewport_width=%5$s&pixelratio=%6$s&gamename=%7$s&"
-            + "viewport_height=%8$s&conn_type=%9$s&cb=%4$d&"
+            + "viewport_height=%8$s&conn_type=%9$s&manufacturer=%10$s&cb=%4$d&"
             + "charset=UTF-8&source=%3$s";
+
+    // Action download html file and inject it in the webview
+    private static final int DOWNLOAD_HTML = 0;
+
+    // Action open the url in an iframe
+    private static final int IN_IFRAME = 1;
 
 
     /** The softgames ad. */
@@ -226,6 +228,49 @@ public class OpenxAdView extends ViewGroup {
     }
 
     /**
+     * Gets the html code from openx
+     * 
+     * @param zoneID
+     * @param mode
+     *            The mode how the ads will be retrieved
+     * @return
+     */
+    private String getZoneTemplate(int zoneID, int mode) {
+        Log.d(LOGTAG, "getZoneTemplateHtml() zoneID: " + zoneID);
+        String openxHtml = "", zoneTag = "";
+
+        try {
+            zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://"
+                    : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
+                    source == null ? "" : URLEncoder.encode(source, "utf-8"),
+                    prng.nextLong(), softgamesAd.getViewportWidth(),
+                    softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
+                    softgamesAd.getViewportHeight(),
+                    softgamesAd.getConnectionType(),
+                    softgamesAd.getDeviceManufacturer());
+        } catch (UnsupportedEncodingException e) {
+            Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
+        }
+        if (mode == IN_IFRAME) {
+            templateContext.setTemplateStratgy(new IframeTemplate());
+            return templateContext.getTemplate(zoneTag);
+
+        } else if (mode == DOWNLOAD_HTML) {
+            try {
+                DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+                openxHtml = htmlTask.execute(zoneTag).get();
+                return openxHtml;
+
+            } catch (InterruptedException e) {
+                Log.e(LOGTAG, "", e);
+            } catch (ExecutionException e) {
+                Log.e(LOGTAG, "", e);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Gets the zone template.
      * 
      * @param zoneID
@@ -237,7 +282,7 @@ public class OpenxAdView extends ViewGroup {
         Log.d(LOGTAG, "getZoneTemplate() zoneID: " + zoneID);
 
         try {
-            String zoneTag = String.format(URL, (hasHTTPS ? "https://"
+            String zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
@@ -245,14 +290,15 @@ public class OpenxAdView extends ViewGroup {
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType());
 
+            Log.e(LOGTAG, "URL_ENCODED: " + zoneTag);
             SGTemplate sgTemplate = SGTemplate.valueOf(template);
 
             switch (sgTemplate) {
             case LOADING_SCREEN:
-                templateContext.setTemplateStratgy(new LoadingScreenTemplate());
+                templateContext.setTemplateStratgy(new HtmlTemplate());
                 return templateContext.getTemplate(zoneTag);
             default:
-                templateContext.setTemplateStratgy(new CleanTemplate());
+                templateContext.setTemplateStratgy(new IframeTemplate());
                 return templateContext.getTemplate(zoneTag);
 
             }
@@ -264,24 +310,29 @@ public class OpenxAdView extends ViewGroup {
         return null;
     }
 
+    @Deprecated
     protected String getZoneTemplateHtml(int zoneID) {
         Log.d(LOGTAG, "getZoneTemplateHtml() zoneID: " + zoneID);
+
         String openxHtml = "";
-        DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+        String zoneTag = "";
+
         try {
-            String zoneTag = String.format(URL_PLAIN,
-                    (hasHTTPS ? "https://"
+            zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://"
                     : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
                     source == null ? "" : URLEncoder.encode(source, "utf-8"),
                     prng.nextLong(), softgamesAd.getViewportWidth(),
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType());
-
-            openxHtml = htmlTask.execute(zoneTag).get();
-
+            Log.e(LOGTAG, "URL_PLAIN: " + zoneTag);
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
+        }
+        try {
+            DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+            openxHtml = htmlTask.execute(zoneTag).get();
+
         } catch (InterruptedException e) {
             Log.e(LOGTAG, "", e);
         } catch (ExecutionException e) {
@@ -321,7 +372,19 @@ public class OpenxAdView extends ViewGroup {
      */
     public void load() {
         if (zoneID != null) {
-            load(zoneID);
+            load(zoneID, DOWNLOAD_HTML);
+        } else {
+            Log.w(LOGTAG, "zoneID is empty");
+        }
+    }
+
+    /**
+     * Load the delivery url in an iframe.
+     */
+    public void loadInIframe() {
+
+        if (zoneID != null) {
+            load(zoneID, IN_IFRAME);
         } else {
             Log.w(LOGTAG, "zoneID is empty");
         }
@@ -336,14 +399,13 @@ public class OpenxAdView extends ViewGroup {
      *            ID of OpenX zone to load ads from.
      * @see #load()
      */
-    public void load(int zoneID) {
+    public void load(int zoneID, int mode) {
         Log.d(LOGTAG, "loadUrl with zoneID: " + zoneID);
         // check required parameters
         if (deliveryURL != null) {
-            // webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID),
-            // "text/html", "utf-8", null);
-            webView.loadDataWithBaseURL(null, getZoneTemplateHtml(zoneID),
+            webView.loadDataWithBaseURL(null, getZoneTemplate(zoneID, mode),
                     "text/html", "utf-8", null);
+
         } else {
             Log.w(LOGTAG, "deliveryURL is empty");
         }

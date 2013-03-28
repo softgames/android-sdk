@@ -37,6 +37,8 @@ public final class ServerUtilities {
         Log.i(TAG, "registering device (regId = " + regId + ")");
         String serverUrl = SGSettings.SERVER_URL + "/"
                 + context.getPackageName();
+        // String serverUrl = SGSettings.SERVER_URL + "/de.softgames.demo";
+
         Map<String, String> params = new HashMap<String, String>();
 
         String deviceId = Installation.id(context);
@@ -94,8 +96,7 @@ public final class ServerUtilities {
         Log.i(TAG, "unregistering device (regId = " + regId + ")");
         String deviceId = Installation.id(context);
         String serverUrl = SGSettings.SERVER_URL + "/"
-                + context.getPackageName() + "/"
-                + deviceId;
+                + context.getPackageName() + "/" + deviceId;
 
         try {
             delete(serverUrl, null);
