@@ -170,8 +170,10 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         // The density is gather in order to determine the pixel ratio
         Float density = SoftgamesUI.getScreenDensity(windowManager);
 
+        String packageName = getApplicationContext().getPackageName();
         Display display = windowManager.getDefaultDisplay();
-        SoftgamesAd softgamesAd = new SoftgamesAd(SGSettings.getGameName(),
+
+        SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
                 display.getWidth(), display.getHeight(), density,
                 NetworkUtilities.getConnectionType(getApplicationContext()),
                 Build.MANUFACTURER);

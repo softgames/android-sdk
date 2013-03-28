@@ -87,8 +87,7 @@ public class SGRegistrator {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG,
-                    "The device could not be registered, maybe it does not support GCM");
+            Log.e(TAG, "The device could not be registered", e);
         }
 
     }

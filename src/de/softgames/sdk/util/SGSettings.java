@@ -34,8 +34,6 @@ public final class SGSettings {
     /** The internet connection is required by default. */
     public static boolean internetRequired = true;
 
-    public static String gameName = "";
-
 
     /**
      * Checks if internet is required.
@@ -77,25 +75,6 @@ public final class SGSettings {
      */
     public static void setLauncherActivity(Class<?> launcherActivity) {
         SGSettings.launcherActivity = launcherActivity;
-    }
-
-    /**
-     * Gets the game name.
-     * 
-     * @return the game name
-     */
-    public static String getGameName() {
-        return gameName;
-    }
-
-    /**
-     * Sets the game name.
-     * 
-     * @param gameName
-     *            the new game name
-     */
-    public static void setGameName(String gameName) {
-        SGSettings.gameName = gameName;
     }
 
 }
