@@ -28,9 +28,9 @@ Eclipse->Project Preferences->Android->Add
 _The following permissions are needed by Google Cloud Messaging_
 ```xml
     <permission
-        android:name="de.softgames.tester.permission.C2D_MESSAGE"
+        android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />    
-    <uses-permission android:name="de.softgames.tester.permission.C2D_MESSAGE" />    
+    <uses-permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE" />    
     <!-- App receives GCM messages. -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <!-- GCM requires a Google account for devices running android below version 4. -->
