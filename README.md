@@ -71,7 +71,7 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="**YOUR_PACKAGE_NAME**" />
+                <category android:name="YOUR_PACKAGE_NAME" />
             </intent-filter>
         </receiver>
  
@@ -92,8 +92,6 @@ public class Softgames extends Application {
          */
         SGSettings.setLauncherActivity(SDKDemoActivity.class);
 
-        /* The game's name must be set in order to track the ads */
-        SGSettings.setGameName("MyAwesomeGame");
         /*
          * In case your app does not require an active internet connection,
          * please set this VAR as false
