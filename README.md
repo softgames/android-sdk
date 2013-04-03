@@ -38,8 +38,6 @@ _The following permissions are needed by Google Cloud Messaging_
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
 _General permissions_
