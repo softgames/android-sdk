@@ -48,7 +48,7 @@ _General permissions_
 ### 3. Set the SoftgamesActivity as the launcher activity in the _AndroidManifest.xml_
 ```xml
  <activity
-            android:name="**de.softgames.sdk.SoftgamesActivity**"
+            android:name="de.softgames.sdk.SoftgamesActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
