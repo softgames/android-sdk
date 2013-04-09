@@ -99,6 +99,17 @@ public class Softgames extends Application {
     }
 }
 ```
+
+Add it to your Manifest
+```xml
+<application
+        android:name="de.softgames.demo.Softgames"
+        .
+        .
+        .
+</application>        
+```
+
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
