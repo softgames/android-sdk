@@ -103,7 +103,7 @@ public class Softgames extends Application {
 Add it to your Manifest
 ```xml
 <application
-        android:name="de.softgames.demo.Softgames"
+        android:name="THE_PATH_TO_THE_CLASS_THAT_EXTENDS_APPLICATION"
         >
         .
         .
