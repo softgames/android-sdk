@@ -104,6 +104,7 @@ Add it to your Manifest
 ```xml
 <application
         android:name="de.softgames.demo.Softgames"
+        >
         .
         .
         .
