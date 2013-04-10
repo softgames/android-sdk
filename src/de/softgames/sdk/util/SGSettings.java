@@ -1,6 +1,7 @@
 package de.softgames.sdk.util;
 
 
+import android.graphics.drawable.Drawable;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 
 
@@ -33,6 +34,10 @@ public final class SGSettings {
 
     /** The internet connection is required by default. */
     public static boolean internetRequired = true;
+    
+    public static Drawable teaserImage;
+    
+    public static String gameName;
 
 
     /**
@@ -77,4 +82,21 @@ public final class SGSettings {
         SGSettings.launcherActivity = launcherActivity;
     }
 
+    public static Drawable getTeaserImage() {
+        return teaserImage;
+    }
+
+    public static void setTeaserImage(Drawable teaserImage) {
+        SGSettings.teaserImage = teaserImage;
+    }
+
+    public static String getGameName() {
+        return gameName;
+    }
+
+    public static void setGameName(String gameName) {
+        SGSettings.gameName = gameName;
+    }
+
+    
 }
