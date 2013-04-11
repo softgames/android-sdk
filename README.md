@@ -77,13 +77,23 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
 ```
 ### 5. Create the `Softgames` class
 
-Create a class that extends `android.app.Application`, this class will setup the general behaviour. The `Softgames`  name is optional.
+Create a class that extends `android.app.Application`, this class will setup the general behaviour.
+This is basically where we set the configurations such as: 
+- game name(String)
+- teaser image(resource int id). We suggest to have at least two images for the teaser, one for small screens
+  and other for tablets(we use the folder drawable-sw600dp). 
+- Internet required(boolean)
 
 ```java
 public class Softgames extends Application {
 
     @Override
     public void onCreate() {
+         
+         //Assign the proper value to the constant teaserImgId, you should provide this image
+         private final int teaserImgId = R.drawable.teaser_image;
+         private Drawable teaserImg;
+    
         /*
          * Init your app's entry point activity. This is the activity that you
          * want to be called when the app starts
@@ -95,12 +105,24 @@ public class Softgames extends Application {
          * please set this VAR as false
          */
         // SGSettings.setInternetRequired(false);
+        
+        /*
+         * You can set with this method the teaser image that is going to be
+         * displayed in the cross-promotion page. This image is relate to your game
+         */
+        teaserImg = getResources().getDrawable(teaserImgId);
+        SGSettings.setTeaserImage(teaserImg);
+        
+        /*
+         * Set the name of the game.
+         * */
+        SGSettings.setGameName(getResources().getString(R.string.app_name));
         super.onCreate();
     }
 }
 ```
 
-Add it to your Manifest
+Add this to your Manifest file. The name attribute of the application item is the path to the softgames class created before.
 ```xml
 <application
         android:name="THE_PATH_TO_THE_CLASS_THAT_EXTENDS_APPLICATION"
