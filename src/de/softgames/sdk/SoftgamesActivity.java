@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -66,6 +67,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     private OpenxAdView loadingScreenAdView;
 
     private OpenxAdView crossPromoAdView;
+    
+    private ImageView teaserImage;
 
     private Button buttonPlay;
 
@@ -74,13 +77,12 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
     /** The m tracker. */
     private Tracker mTracker;
-    
+
     /** The Constant XPROMO_SCREEN_ID. */
     private static final int XPROMO_SCREEN_ID = 1;
-    
+
     /** The Constant LOADING_SCREEN_ID. */
     private static final int LOADING_SCREEN_ID = 2;
-
 
     /*
      * (non-Javadoc)
@@ -112,8 +114,11 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         buttonPlay = (Button) findViewById(R.id.button_play);
 
         // Custom type face
-        TextView xpromoDividerText = (TextView) findViewById(R.id.divider_text);
-        TextView teaserGameName = (TextView) findViewById(R.id.text_teaser_text);
+        TextView xpromoDividerText = (TextView) findViewById(R.id.divider_text);        
+        TextView teaserGameName = (TextView) findViewById(R.id.teaser_text);
+        if (SGSettings.gameName != null && SGSettings.gameName != "") {
+            teaserGameName.setText(SGSettings.gameName);
+        }
         try {
             Typeface typeface = Typeface.createFromAsset(getAssets(),
                     "oswald.ttf");
@@ -122,7 +127,14 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             Log.e(TAG, "The font oswald_bold is missing from the assets folder");
         }
+        
+        teaserImage = (ImageView) findViewById(R.id.teaserImage);
+        if (SGSettings.getTeaserImage() != null) {
+            teaserImage.setImageDrawable(SGSettings.teaserImage);
+        } else {
 
+        }
+        
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
         // Thread to display a splash screen during the given seconds
         scheduleTaskExecutor.schedule(new Runnable() {
@@ -181,39 +193,31 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         OpenxAdView.setSoftgamesAd(softgamesAd);
     }
 
-    /**
-     * The ad's layout is requested with its respective banner.
-     */
-    private void showLoadingScreen() {
-        if (SGSettings.isInternetRequired()) {
-            requestAd();
-        } else {
-            startApp();
-        }
-    }
+    
 
     /**
      * Shows the screen with the cross promotion from openx.
      */
     private void showCrosspromotion() {
 
-        if (SGSettings.isInternetRequired()) {
-            if (!NetworkUtilities.isOnline(this)) {
+        if (!NetworkUtilities.isOnline(this)) {
+            if (SGSettings.isInternetRequired()) {
                 buildRetryConnectionDialog();
             } else {
-                try {
-                    crossPromoAdView.load();
-                    // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
-                    flipper.setDisplayedChild(XPROMO_SCREEN_ID);
-                    mTracker.sendView("/CrossPromotionPage");
-
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
+                startApp();
             }
         } else {
-            startApp();
+            try {
+                crossPromoAdView.load();
+                // flipper.setInAnimation(SoftgamesUI.inFromRightAnimation());
+                flipper.setDisplayedChild(XPROMO_SCREEN_ID);
+                mTracker.sendView("/CrossPromotionPage");
+
+            } catch (Exception e) {
+                Log.e(TAG, "error", e);
+            }
         }
+
     }
 
     /**
@@ -242,10 +246,15 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     /**
      * Requests an ad and displays it during the given seconds.
      */
-    private void requestAd() {
+    private void showLoadingScreen() {
         long adDelay = SGSettings.AD_DELAY;
         if (!NetworkUtilities.isOnline(this)) {
-            buildRetryConnectionDialog();
+            if (SGSettings.isInternetRequired()) {
+                buildRetryConnectionDialog();
+            } else {
+                startApp();
+            }
+            
         } else {
             try {
                 loadingScreenAdView.loadInIframe();
@@ -292,7 +301,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        requestAd();
+                        showLoadingScreen();
                     }
                 });
 
@@ -300,6 +309,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        startApp();
                     }
                 });
 
