@@ -81,7 +81,8 @@ Create a class that extends `android.app.Application`, this class will setup the
 This is basically where we set the configurations such as: 
 - game name(String)
 - teaser image(resource int id). We suggest to have at least two images for the teaser, one for small screens
-  and other for tablets(we use the folder drawable-sw600dp). 
+  and another for tablets(we use the folder drawable-sw600dp for tablets). 
+  ***The suggested dimensions of this image are 300x180 for phones and 600x360 for tablets.***
 - Internet required(boolean)
 
 ```java
@@ -108,7 +109,7 @@ public class Softgames extends Application {
         
         /*
          * You can set with this method the teaser image that is going to be
-         * displayed in the cross-promotion page. This image is relate to your game
+         * displayed in the cross-promotion page. This image is related to your game
          */
         teaserImg = getResources().getDrawable(teaserImgId);
         SGSettings.setTeaserImage(teaserImg);
