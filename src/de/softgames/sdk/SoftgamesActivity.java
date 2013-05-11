@@ -5,12 +5,14 @@
 package de.softgames.sdk;
 
 
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +20,7 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -34,6 +37,7 @@ import com.google.analytics.tracking.android.Tracker;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.ui.SoftgamesUI;
+import de.softgames.sdk.util.NetworkType;
 import de.softgames.sdk.util.NetworkUtilities;
 import de.softgames.sdk.util.SGSettings;
 
@@ -84,6 +88,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     /** The Constant LOADING_SCREEN_ID. */
     private static final int LOADING_SCREEN_ID = 2;
 
+    protected static final int ACTIVITY_RESULT_SETTINGS = 10;
+
     /*
      * (non-Javadoc)
      * 
@@ -106,7 +112,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         setContentView(R.layout.sg_flipper);
         res = getResources();
         flipper = (ViewFlipper) findViewById(R.id.softgames_master);
-
+        mTracker.sendView("/SplasScreen");
+        
         // The Openx ads are instantiated
         loadingScreenAdView = (OpenxAdView) findViewById(R.id.adview);
         crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
@@ -177,6 +184,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
      * initializes the necessary objects to display ads.
      */
     private void initOpenxAds() {
+	 String language = "", countryCode = "";
         // Gets an instance of window manager for display related tasks
         WindowManager windowManager = getWindowManager();
         // The density is gather in order to determine the pixel ratio
@@ -184,13 +192,31 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
         String packageName = getApplicationContext().getPackageName();
         Display display = windowManager.getDefaultDisplay();
-
+        try {
+            Locale locale = getResources().getConfiguration().locale;        
+            TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+            countryCode = tm.getSimCountryIso();
+            if (countryCode == null || countryCode.equals("")) {
+    	    countryCode = locale.getCountry();
+    	}
+            language = locale.getDisplayLanguage();
+	} catch (Exception e) {
+	    Log.e(TAG, "There was an error getting the language and country code");
+	}        
+        
+        int connectionType = NetworkUtilities.getConnectionType(getApplicationContext());
         SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
                 display.getWidth(), display.getHeight(), density,
-                NetworkUtilities.getConnectionType(getApplicationContext()),
-                Build.MANUFACTURER);
+                connectionType,
+                Build.MANUFACTURER, language, countryCode);
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
+        
+        String sInternetStatus = "no";
+        if (connectionType != NetworkType.UNKNOWN.getValue()) {
+           sInternetStatus = "yes";
+	} 
+        mTracker.sendEvent("internet_connection", sInternetStatus, "type", Long.valueOf(connectionType));
     }
 
     
@@ -233,6 +259,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
             // instantiated
             launcherActivity = SGSettings.getLauncherActivity();
             Log.d(TAG, "Starting the Activty indicated as entry point");
+            mTracker.sendView("/GameStarted");
             Intent intent = new Intent(this, launcherActivity);
             startActivity(intent);
         } catch (IllegalLauncherActivityException e) {
@@ -309,7 +336,9 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        startApp();
+                        Intent intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivityForResult(intent, ACTIVITY_RESULT_SETTINGS);
+                        //startApp();
                     }
                 });
 
@@ -349,7 +378,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        mTracker.sendView("/SoftgamesActivity");
+        
     }
 
     @Override
@@ -362,6 +391,15 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         if (v.getId() == R.id.button_play) {
             showLoadingScreen();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	if (requestCode == ACTIVITY_RESULT_SETTINGS) {
+	    Intent intent = new Intent(SoftgamesActivity.this, SoftgamesActivity.class);
+	        startActivity(intent);
+	}
     }
 
 }
