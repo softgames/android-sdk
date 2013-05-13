@@ -1,5 +1,18 @@
 <resources>
 
-    <string name="app_name">SoftgamesSDK</string>
+    <string name="sg_app_name">SoftgamesSDK</string>
+    <string name="zoneLoadingId">274</string>
+    <string name="zoneXpromoId">273</string>
+    <string name="sg_registered_on_server">Registered on server</string>
+    <string name="offline_retry_msg">Please check your Internet connection!</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_exit">Dismiss</string>
+    <string name="current_game_name">CurrentGameName</string>
+    <plurals name="sg_server_register_error">
+        <item quantity="one">Failed to register after one attempt</item>
+        <item quantity="other">Failed to register after %d attempts</item>
+    </plurals>
+    
+    <string name="divider_text">You might also like:</string>
 
 </resources>
