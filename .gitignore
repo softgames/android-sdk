@@ -8,6 +8,9 @@
 # Java class files
 *.class
 
+# mac os
+*.DS_Store
+
 # generated files
 bin/
 gen/
