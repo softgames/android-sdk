@@ -113,7 +113,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 	setContentView(R.layout.sg_flipper);
 	res = getResources();
 	flipper = (ViewFlipper) findViewById(R.id.softgames_master);
-	mTracker.sendView("/SplasScreen");
+	mTracker.sendView("/SplashScreen");
 
 	// The Openx ads are instantiated
 	loadingScreenAdView = (OpenxAdView) findViewById(R.id.adview);
