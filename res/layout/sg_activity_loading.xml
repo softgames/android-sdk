@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"    
+    android:orientation="vertical"
+    android:gravity="center">
+            
+    <de.softgames.sdk.OpenxAdView
+           android:id="@+id/adview"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_vertical|center_horizontal"           
+           ox:zone_id="@string/zoneLoadingId"
+           ox:template="CLEAN"
+           ox:js_tag_url="afr.php"/>
+    
+</LinearLayout>
