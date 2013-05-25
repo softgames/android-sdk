@@ -218,8 +218,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 	if (connectionType != NetworkType.UNKNOWN.getValue()) {
 	    sInternetStatus = "yes";
 	}
-	mTracker.sendEvent("internet_connection", sInternetStatus, "type",
-		Long.valueOf(connectionType));
+        mTracker.sendEvent("internet_connection", sInternetStatus,
+                Long.valueOf(connectionType) + "", Long.valueOf(connectionType));
     }
 
     /**

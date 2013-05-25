@@ -222,7 +222,6 @@ public class OpenxAdView extends ViewGroup {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new OpenXAdWebChromeClient());
-        // TODO remove for production
         webView.clearCache(true);
         addView(webView);
     }
