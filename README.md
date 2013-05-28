@@ -133,7 +133,39 @@ Add this to your Manifest file. The name attribute of the application item is th
         .
 </application>        
 ```
+## Set up the push notifications
 
+In order to allow us to send push notifications through our SDK you need to do the following in your Main Activity
+
+```java
+    // Registrator object used to establish a communication with Google Cloud
+    // messaging
+    public SGRegistrator registrator;
+```
+
+In the _onCreate_ method
+
+```java
+        /*
+         * You must instantiate this object in order to get working the push
+         * notifications.
+         */
+        registrator = new SGRegistrator(this);
+        
+        /*
+         * this method must be invoked in order to register the device on the
+         * softgames server
+         */
+        registrator.registerMe();        
+```
+
+Finally in the _onDestroy_ method 
+
+```java
+        // This method is called to make sure that the async task initiated by
+        // the registrator is terminated
+        registrator.killTask();
+```
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
