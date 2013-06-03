@@ -14,7 +14,7 @@ public final class SGSettings {
     public static final String PREFS_NAME = "SGPrefsFile";
 
     /** The Constant FIRST_SESSION to use as key in the SharedPreferences file. */
-    public static final String FIRST_SESSION = "fisrtSession";
+    public static final String FIRST_SESSION = "firstSession";
 
     /** The Constant SPLASH_DELAY in seconds. */
     public static final int SPLASH_DELAY = 3;
