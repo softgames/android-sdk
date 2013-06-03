@@ -22,6 +22,10 @@ public class SoftgamesAd {
     private int connectionType;
 
     private String deviceManufacturer;
+    
+    private String locale;
+    
+    private String country;
 
     /**
      * Instantiates a new softgames ad.
@@ -38,17 +42,18 @@ public class SoftgamesAd {
      *            the type of internet connectivity
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
-            Integer viewPortHeight, Float pixelRatio, int connectionType,
-            String deviceManufacturer) {
-        super();
-        this.gameName = gameName;
-        this.viewportWidth = viewportWidth;
-        this.viewPortHeight = viewPortHeight;
-        this.pixelRatio = pixelRatio;
-        this.connectionType = connectionType;
-        this.deviceManufacturer = deviceManufacturer;
+	    Integer viewPortHeight, Float pixelRatio, int connectionType,
+	    String deviceManufacturer, String locale, String country) {
+	super();
+	this.gameName = gameName;
+	this.viewportWidth = viewportWidth;
+	this.viewPortHeight = viewPortHeight;
+	this.pixelRatio = pixelRatio;
+	this.connectionType = connectionType;
+	this.deviceManufacturer = deviceManufacturer;
+	this.locale = locale;
+	this.country = country;
     }
-
 
     /**
      * Gets the game name.
@@ -59,6 +64,7 @@ public class SoftgamesAd {
         return gameName;
     }
 
+    
     /**
      * Sets the game name.
      * 
@@ -154,13 +160,32 @@ public class SoftgamesAd {
         this.deviceManufacturer = deviceManufacturer;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+
+    public String getCountry() {
+        return country;
+    }
+
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public String toString() {
-        return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
-                + viewportWidth + ", viewPortHeight=" + viewPortHeight
-                + ", pixelRatio=" + pixelRatio + ", connectionType="
-                + connectionType + ", deviceManufacturer=" + deviceManufacturer
-                + "]";
+	return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
+		+ viewportWidth + ", viewPortHeight=" + viewPortHeight
+		+ ", pixelRatio=" + pixelRatio + ", connectionType="
+		+ connectionType + ", deviceManufacturer=" + deviceManufacturer
+		+ ", locale=" + locale + ", country=" + country + "]";
     }
 
 
