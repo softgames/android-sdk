@@ -378,7 +378,7 @@ public class OpenxAdView extends ViewGroup {
     }
 
     /**
-     * Load the delivery url in an iframe.
+     * Load the delivery URL in an IFRAME.
      */
     public void loadInIframe() {
 

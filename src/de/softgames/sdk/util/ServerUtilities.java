@@ -23,7 +23,7 @@ import com.google.android.gcm.GCMRegistrar;
 
 public final class ServerUtilities {
 
-    public static final int MAX_ATTEMPTS = 3;
+    public static final int MAX_ATTEMPTS = 2;
     private static final int BACKOFF_MILLI_SECONDS = 1000;
     private static final Random random = new Random();
     private static final String TAG = ServerUtilities.class.getSimpleName();

@@ -35,7 +35,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignBaseline="@+id/button_play"
                 android:gravity="center_vertical"
-                android:text="@string/current_game_name" />
+                android:text="@string/sg_current_game_name" />
 
             <Button
                 android:id="@+id/button_play"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/divider_text" />
+            android:text="@string/sg_divider_text" />
 
         <View
             android:id="@+id/second_divider"
@@ -83,7 +83,7 @@
 	        android:layout_height="fill_parent"
 	        ox:js_tag_url="afr.php"
 	        ox:template="CLEAN"
-	        ox:zone_id="@string/zoneXpromoId" 
+	        ox:zone_id="@string/sg_zoneXpromoId" 
 	        android:layout_gravity="top|center_horizontal"/>
 	</LinearLayout>
 </LinearLayout>
