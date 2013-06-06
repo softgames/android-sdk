@@ -322,10 +322,10 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 	res = this.getResources();
 	AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-	builder.setMessage(res.getString(R.string.offline_retry_msg));
+	builder.setMessage(res.getString(R.string.sg_offline_retry_msg));
 	builder.setCancelable(true);
 
-	builder.setPositiveButton(res.getString(R.string.button_retry),
+	builder.setPositiveButton(res.getString(R.string.sg_button_retry),
 		new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int id) {
 			dialog.cancel();
@@ -333,7 +333,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 		    }
 		});
 
-	builder.setNegativeButton(res.getString(R.string.button_exit),
+	builder.setNegativeButton(res.getString(R.string.sg_button_exit),
 		new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int id) {
 			dialog.cancel();

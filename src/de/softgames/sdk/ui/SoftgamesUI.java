@@ -148,9 +148,9 @@ public final class SoftgamesUI {
             Bitmap largeNotificationIcon = largeNotificationIconDrawable
                     .getBitmap();
             int height = (int) res
-                    .getDimension(R.dimen.notification_large_icon_height);
+                    .getDimension(R.dimen.sg_notification_large_icon_height);
             int width = (int) res
-                    .getDimension(R.dimen.notification_large_icon_width);
+                    .getDimension(R.dimen.sg_notification_large_icon_width);
             largeNotificationIcon = Bitmap.createScaledBitmap(
                     largeNotificationIcon, width, height, false);
 
