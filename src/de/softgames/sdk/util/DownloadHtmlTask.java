@@ -13,6 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,17 +23,38 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
 
     private static final String TAG = DownloadHtmlTask.class.getSimpleName();
     private static HttpResponse response;
+    private Context mContext;
+    private ProgressDialog progressDialog;
+
+    public DownloadHtmlTask(Context mContext) {
+        super();
+        this.mContext = mContext;
+        initProgressDialog();
+    }
+
+    private void initProgressDialog() {
+        if (mContext != null) {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(true);
+        }
+    }
 
     @Override
     protected void onPreExecute() {
         Log.d(TAG, "Downloading data...");
         super.onPreExecute();
+        progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(String result) {
         Log.d(TAG, "Downloaded!");
         super.onPostExecute(result);
+        if (mContext != null) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -44,8 +67,9 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
             response = httpclient.execute(httpget);
             // Execute it
             HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent(); // Create an InputStream with
-                                                  // the response
+            InputStream inputStream = entity.getContent(); // Create an
+                                                           // InputStream with
+            // the response
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     inputStream, "utf8"), 8);
             StringBuilder sb = new StringBuilder();
@@ -60,13 +84,15 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
             inputStream.close(); // Close the stream
 
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error downloading data");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error downloading data");
+        } catch (Exception e) {
+            Log.e(TAG, "error downloading data");
+            progressDialog.dismiss();
         }
 
         return resString;
     }
-
 
 }

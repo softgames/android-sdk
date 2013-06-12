@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
-    android:id="@+id/xpromo"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/sg_bg_xpromo"
@@ -15,6 +14,7 @@
 
         <ImageView
             android:id="@+id/teaserImage"
+            android:contentDescription="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
@@ -34,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignBaseline="@+id/button_play"
-                android:gravity="center_vertical"
-                android:text="@string/sg_current_game_name" />
+                android:gravity="center_vertical" />
 
             <Button
                 android:id="@+id/button_play"
@@ -55,7 +54,7 @@
 
         <View
             android:id="@+id/first_divider"
-            style="@style/Divider"
+            style="@style/SGDivider"
             android:layout_width="match_parent" />
 
         <TextView
@@ -68,7 +67,7 @@
 
         <View
             android:id="@+id/second_divider"
-            style="@style/Divider"
+            style="@style/SGDivider"
             android:layout_width="match_parent" />
 	</LinearLayout>
 	

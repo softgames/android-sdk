@@ -138,6 +138,8 @@ public class OpenxAdView extends ViewGroup {
 
     /** The res. */
     private Resources res;
+    
+    private Context context;
 
     private TemplateContext templateContext = new TemplateContext();
 
@@ -150,6 +152,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context) {
         super(context);
+        this.context = context;
         this.res = context.getResources();
         this.webView = new WebView(context);
         initWebView();
@@ -168,6 +171,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.context = context;
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs, defStyle);
@@ -185,6 +189,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs);
@@ -256,7 +261,7 @@ public class OpenxAdView extends ViewGroup {
 
         } else if (mode == DOWNLOAD_HTML) {
             try {
-                DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+                DownloadHtmlTask htmlTask = new DownloadHtmlTask(context);
                 openxHtml = htmlTask.execute(zoneTag).get();
                 return openxHtml;
 
@@ -329,7 +334,7 @@ public class OpenxAdView extends ViewGroup {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
         }
         try {
-            DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+            DownloadHtmlTask htmlTask = new DownloadHtmlTask(context);
             openxHtml = htmlTask.execute(zoneTag).get();
 
         } catch (InterruptedException e) {

@@ -1,7 +1,12 @@
 package de.softgames.sdk.util;
 
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Tracker;
+
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 
 
@@ -22,23 +27,47 @@ public final class SGSettings {
     public static final long AD_DELAY = 5;
 
     public static final long X_PROMO_DELAY = 5;
-
-    /** The launcher activity. */
-    public static Class<?> launcherActivity;
-
+    
     /** The Constant SERVER_URL. */
     protected static final String SERVER_URL = "http://mobile-notifications.softgames.de/devices";
-    // Google API project id registered to use GCM.
-    /** The Constant SENDER_ID. */
+    
+    /** Google API project id registered to use GCM. */
     public static final String SENDER_ID = "1079642456342";
+    
+    /** The google analytics instance. */
+    private static GoogleAnalytics mGaInstance;
+
+    /** The m tracker. */
+    private static Tracker mTracker;
+
+    /** The launcher activity. */
+    private static Class<?> launcherActivity;
 
     /** The internet connection is required by default. */
-    public static boolean internetRequired = true;
+    private static boolean internetRequired = true;
     
-    public static Drawable teaserImage;
+    private static Drawable teaserImage;
     
-    public static String gameName;
+    private static String gameName;
+    
+    private static boolean isOrientationLandscape = false;
 
+    
+    /**
+     * Inits the google analytics.
+     */
+    public static void initGAnalyticsTracker(Context ctx) {
+        // Get the GoogleAnalytics singleton.
+        mGaInstance = GoogleAnalytics.getInstance(ctx);
+
+        // Use the GoogleAnalytics singleton to get a Tracker.
+        mTracker = mGaInstance.getTracker("UA-39037923-2");
+        
+        // Set the created tracker as default
+        mGaInstance.setDefaultTracker(mTracker);
+        
+    }
+    
 
     /**
      * Checks if internet is required.
@@ -98,5 +127,14 @@ public final class SGSettings {
         SGSettings.gameName = gameName;
     }
 
+
+    public static boolean isOrientationLandscape() {
+        return isOrientationLandscape;
+    }
+
+
+    public static void setOrientationLandscape(boolean isOrientationLandscape) {
+        SGSettings.isOrientationLandscape = isOrientationLandscape;
+    }
     
 }
