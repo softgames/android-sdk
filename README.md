@@ -139,7 +139,12 @@ Add this to your Manifest file. The name attribute of the application item is th
         .
 </application>        
 ```
-## Set up the push notifications
+
+### 6. Include the MoreGamesButton view in your game activity
+
+
+
+### 7. Set up the push notifications
 
 The push notifications are automatically set up in the SoftgamesActivity
 
