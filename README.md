@@ -1,4 +1,4 @@
-# Guide to the Softgames SDK
+# Guide to the Softgames SDK 2.0
 
 _This page describes the Softgames SDK functionality and usage._
 
@@ -75,10 +75,12 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
  
         <service android:name="de.softgames.sdk.GCMIntentService"/>
 ```
-### 5. Create the `Softgames` class
+### 5. Create the `SoftgamesApplication` class or simply copy this class in your project
 
 Create a class that extends `android.app.Application`, this class will setup the general behaviour.
 This is basically where we set the configurations such as: 
+- Init the Google Analytics tracker
+- Set your Main activity or Launcher activity
 - game name(String)
 - teaser image(resource int id). We suggest to have at least two images for the teaser, one for small screens
   and another for tablets(we use the folder drawable-sw600dp for tablets). 
@@ -86,15 +88,14 @@ This is basically where we set the configurations such as:
 - Internet required(boolean)
 
 ```java
-public class Softgames extends Application {
+public class SoftgamesApplication extends Application {
 
     @Override
     public void onCreate() {
          
-         //Assign the proper value to the constant teaserImgId, you should provide this image
-         private final int teaserImgId = R.drawable.teaser_image;
-         private Drawable teaserImg;
-    
+        // Initializes the GoogleAnalytics tracker object
+        SGSettings.initGAnalyticsTracker(getApplicationContext());
+
         /*
          * Init your app's entry point activity. This is the activity that you
          * want to be called when the app starts
@@ -105,20 +106,25 @@ public class Softgames extends Application {
          * In case your app does not require an active internet connection,
          * please set this VAR as false
          */
-        // SGSettings.setInternetRequired(false);
-        
+        SGSettings.setInternetRequired(true);
+
         /*
-         * You can set with this method the teaser image that is going to be
-         * displayed in the cross-promotion page. This image is related to your game
+         * Set here the orientation of the game. Portrait is default
          */
-        teaserImg = getResources().getDrawable(teaserImgId);
-        SGSettings.setTeaserImage(teaserImg);
-        
+        SGSettings.setOrientationLandscape(true);
+
+        /*
+         * This method sets the teaser image that is going to be
+         * displayed in the cross-promotion page. This image is related to your
+         * game
+         */
+        SGSettings.setTeaserImage(getResources().getDrawable(
+                R.drawable.teaser_image));
+
         /*
          * Set the name of the game.
-         * */
+         */
         SGSettings.setGameName(getResources().getString(R.string.app_name));
-        super.onCreate();
     }
 }
 ```
@@ -135,37 +141,8 @@ Add this to your Manifest file. The name attribute of the application item is th
 ```
 ## Set up the push notifications
 
-In order to allow us to send push notifications through our SDK you need to do the following in your Main Activity
+The push notifications are automatically set up in the SoftgamesActivity
 
-```java
-    // Registrator object used to establish a communication with Google Cloud
-    // messaging
-    public SGRegistrator registrator;
-```
-
-In the _onCreate_ method
-
-```java
-        /*
-         * You must instantiate this object in order to get working the push
-         * notifications.
-         */
-        registrator = new SGRegistrator(this);
-        
-        /*
-         * this method must be invoked in order to register the device on the
-         * softgames server
-         */
-        registrator.registerMe();        
-```
-
-Finally in the _onDestroy_ method 
-
-```java
-        // This method is called to make sure that the async task initiated by
-        // the registrator is terminated
-        registrator.killTask();
-```
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
