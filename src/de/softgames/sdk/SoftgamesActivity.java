@@ -114,16 +114,16 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
          */
         registrator.registerMe();
 
-        // The portrait orientation is default
-        int orientationId = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-
-        if (SGSettings.isOrientationLandscape()) {
-            orientationId = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        }
-
-        // set the orientation for the ads once the game orientation is
-        // determined
-        // TODO enable for production
+        // // The portrait orientation is default
+        // int orientationId = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        //
+        // if (SGSettings.isOrientationLandscape()) {
+        // orientationId = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        // }
+        //
+        // // TODO enable for production
+        // // set the orientation for the ads once the game orientation is
+        // // determined
         // setRequestedOrientation(orientationId);
 
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
@@ -390,8 +390,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.button_play) {
             // showLoadingScreen();
-            crossPromotionLayout
-                    .startAnimation(SoftgamesUI.outToLeftAnimation());
+            crossPromotionLayout.startAnimation(SoftgamesUI
+                    .outToLeftAnimation());
             startApp();
         }
     }
