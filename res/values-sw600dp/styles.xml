@@ -9,9 +9,16 @@
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">22sp</item>        
     </style>
-    <style name="SGText.divider">
+    
+    <style name="SGText.Divider">
            <item name="android:paddingTop">14dp</item>
            <item name="android:paddingBottom">14dp</item>
+    </style>
+    
+    <style name="SGText.Button">
+        <item name="android:background">@drawable/sg_button_play_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">26sp</item>
     </style>
     
     <style name="SGDivider">

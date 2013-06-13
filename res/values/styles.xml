@@ -7,18 +7,26 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1.0</item>
         <item name="android:textColor">#fff</item>
-        <item name="android:textSize">18sp</item>        
+        <item name="android:textSize">18sp</item>
     </style>
-    <style name="SGText.divider">
-           <item name="android:paddingTop">12dp</item>
-           <item name="android:paddingBottom">12dp</item>
+
+    <style name="SGText.Divider">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
     </style>
-    
+
+    <style name="SGText.Button">
+        <item name="android:background">@drawable/sg_button_play_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+        
+    </style>
+
     <style name="SGDivider">
         <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">#5B6065</item>       
+        <item name="android:background">#5B6065</item>
     </style>
-    
+
     <style name="SGMoreGamesDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/SGMoreGamesDialogAnimation</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -30,7 +38,7 @@
         <item name="android:windowEnterAnimation">@anim/sg_anim_slide_in</item>
         <item name="android:windowExitAnimation">@anim/sg_anim_slide_out</item>
     </style>
-    
+
     <style name="SGDialogTitleText">
         <item name="android:textSize">22sp</item>
     </style>

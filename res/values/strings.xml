@@ -6,6 +6,7 @@
     <string name="sg_offline_retry_msg">Please check your Internet connection!</string>
     <string name="sg_button_retry">Retry</string>
     <string name="sg_button_exit">Settings</string>
+    <string name="sg_button_play">Play</string>
     <plurals name="sg_server_register_error">
         <item quantity="one">Failed to register after one attempt</item>
         <item quantity="other">Failed to register after %d attempts</item>

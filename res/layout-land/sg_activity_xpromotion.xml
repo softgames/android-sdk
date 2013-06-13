@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight=".60"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/container_text"
@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/divider_text"
-                style="@style/SGText.divider"
+                style="@style/SGText.Divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -57,44 +57,50 @@
         </LinearLayout>
     </LinearLayout>
 
-        <FrameLayout
+    <FrameLayout
         android:id="@+id/teaser"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight=".40"
-        android:padding="10dp" >
-
+        android:layout_weight=".40">
+         <View
+            style="@style/SGDivider"
+            android:layout_width="match_parent"
+            android:layout_gravity="top"/>   
         <ImageView
             android:id="@+id/teaserImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
             android:scaleType="centerInside"
+            android:layout_gravity="top"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="1dp"
             android:src="@drawable/sg_xpromo_teaser" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@drawable/sg_bg_darktransparent"
-            android:padding="10dp" >
+            android:padding="8dp"
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/teaser_text"
                 style="@style/SGText"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/button_play"
-                android:layout_alignParentLeft="true"
-                android:gravity="center_vertical" />
+                android:gravity="center_horizontal" 
+                android:paddingBottom="8dp"/>
 
             <Button
                 android:id="@+id/button_play"
-                android:layout_width="wrap_content"
+                style="@style/SGText.Button"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/sg_button_play" />
-        </RelativeLayout>
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sg_button_play"/>
+        </LinearLayout>
     </FrameLayout>
-    
+
 </LinearLayout>
