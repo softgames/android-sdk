@@ -142,7 +142,12 @@ Add this to your Manifest file. The name attribute of the application item is th
 
 ### 6. Include the MoreGamesButton view in your game activity
 
-
+```xml
+<view
+       class="de.softgames.sdk.ui.MoreGamesButton"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+```       
 
 ### 7. Set up the push notifications
 
