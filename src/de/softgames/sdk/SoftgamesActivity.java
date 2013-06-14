@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -26,6 +25,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -104,28 +104,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         crossPromotionLayout = (LinearLayout) findViewById(R.id.xpromo);
         loadingScreenLayout = (LinearLayout) findViewById(R.id.adsLayout);
 
-        /*
-         * This object is needed to get working the push notifications.
-         */
-        registrator = new SGRegistrator(this);
-        /*
-         * this method must be invoked in order to register the device on the
-         * softgames server
-         */
-        registrator.registerMe();
-
-        // // The portrait orientation is default
-        // int orientationId = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        //
-        // if (SGSettings.isOrientationLandscape()) {
-        // orientationId = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        // }
-        //
-        // // TODO enable for production
-        // // set the orientation for the ads once the game orientation is
-        // // determined
-        // setRequestedOrientation(orientationId);
-
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
 
         // We want to show the splash screen and the ads in full screen
@@ -187,6 +165,16 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         }
 
         buttonPlay.setOnClickListener(this);
+        
+        /*
+         * This object is needed to get working the push notifications.
+         */
+        registrator = new SGRegistrator(this);
+        /*
+         * this method must be invoked in order to register the device on the
+         * softgames server
+         */
+        registrator.registerMe();
 
     }
 
@@ -390,8 +378,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.button_play) {
             // showLoadingScreen();
-            crossPromotionLayout.startAnimation(SoftgamesUI
-                    .outToLeftAnimation());
+            crossPromotionLayout.startAnimation(AnimationUtils.loadAnimation(SoftgamesActivity.this, android.R.anim.fade_out));
             startApp();
         }
     }

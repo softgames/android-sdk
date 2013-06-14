@@ -23,7 +23,7 @@
                 android:layout_marginLeft="60dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/sg_dialog_more_games_title"
+                android:text="@string/sg_more_games_title"
                 android:textColor="#000000"
                 android:textStyle="bold"
                 style="@style/SGDialogTitleText" />

@@ -13,7 +13,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -23,38 +22,22 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
 
     private static final String TAG = DownloadHtmlTask.class.getSimpleName();
     private static HttpResponse response;
-    private Context mContext;
-    private ProgressDialog progressDialog;
 
     public DownloadHtmlTask(Context mContext) {
         super();
-        this.mContext = mContext;
-        initProgressDialog();
-    }
-
-    private void initProgressDialog() {
-        if (mContext != null) {
-            progressDialog = new ProgressDialog(mContext);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(true);
-        }
     }
 
     @Override
     protected void onPreExecute() {
         Log.d(TAG, "Downloading data...");
         super.onPreExecute();
-        progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(String result) {
         Log.d(TAG, "Downloaded!");
         super.onPostExecute(result);
-        if (mContext != null) {
-            progressDialog.dismiss();
-        }
+        
     }
 
     @Override
@@ -87,9 +70,6 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
             Log.e(TAG, "error downloading data");
         } catch (IOException e) {
             Log.e(TAG, "error downloading data");
-        } catch (Exception e) {
-            Log.e(TAG, "error downloading data");
-            progressDialog.dismiss();
         }
 
         return resString;

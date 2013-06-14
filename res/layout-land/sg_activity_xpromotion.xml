@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/sg_divider_text" />
+                android:text="@string/sg_more_games_title" />
 
             <View
                 android:id="@+id/second_divider"

@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/sg_button_more_games_selector"
-        android:layout_gravity="top|left"
+        android:layout_gravity="top|right"
         />
     
     <TextView android:id="@+id/sg_ticker_button_more_games"

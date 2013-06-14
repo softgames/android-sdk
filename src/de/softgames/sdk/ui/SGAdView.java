@@ -4,11 +4,6 @@
 package de.softgames.sdk.ui;
 
 
-import com.adwhirl.AdWhirlLayout;
-import com.adwhirl.AdWhirlManager;
-import com.adwhirl.AdWhirlTargeting;
-import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,8 +11,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+
 import de.softgames.sdk.R;
-import de.softgames.sdk.interfaces.ISGAdView;
 
 
 /**
@@ -26,7 +26,7 @@ import de.softgames.sdk.interfaces.ISGAdView;
  * @author rolandcastillo@softgames.de
  */
 public class SGAdView extends FrameLayout implements OnClickListener,
-        AdWhirlInterface, ISGAdView {
+        AdWhirlInterface {
 
     /** The context. */
     private Context mContext;
@@ -127,24 +127,6 @@ public class SGAdView extends FrameLayout implements OnClickListener,
     public void adWhirlGeneric() {
         // TODO Auto-generated method stub
 
-    }
-
-    /* (non-Javadoc)
-     * @see de.softgames.sdk.interfaces.ISGAdView#hideAds()
-     */
-    @Override
-    public void hideAds() {
-        buttonNoAds.setVisibility(View.GONE);
-        adWhirlLayout.setVisibility(View.GONE);
-    }
-
-    /* (non-Javadoc)
-     * @see de.softgames.sdk.interfaces.ISGAdView#showAds()
-     */
-    @Override
-    public void showAds() {
-        buttonNoAds.setVisibility(View.VISIBLE);
-        adWhirlLayout.setVisibility(View.VISIBLE);
     }
 
 }

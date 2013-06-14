@@ -11,7 +11,6 @@
         <item quantity="one">Failed to register after one attempt</item>
         <item quantity="other">Failed to register after %d attempts</item>
     </plurals>
-    <string name="sg_divider_text">You might also like:</string>
-    <string name="sg_dialog_more_games_title">More FREE Games!</string>
+    <string name="sg_more_games_title">More FREE Games!</string>
 
 </resources>
