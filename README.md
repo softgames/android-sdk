@@ -1,6 +1,7 @@
-# Guide to the Softgames SDK
+# Guide to the Softgames SDK 2.0
 
 _This page describes the Softgames SDK functionality and usage._
+You can check an example project containing this code  [here](https://github.com/softgames/android-sdk-demo)!
 
 ## Introduction 
 
@@ -47,22 +48,23 @@ _General permissions_
 ```
 ### 3. Set the SoftgamesActivity as the launcher activity in the _AndroidManifest.xml_
 ```xml
- <activity
+        <activity
             android:name="de.softgames.sdk.SoftgamesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 ```
+Also notice that the orientation for this actitivity is up to you. Both landscape and protrait orientation are supported. 
+
 ### 4. Add the BroadcastReceiver and the IntentService
 
 Lastly, add the BroadcastReceiver and the IntentService which are required by Google cloud messaging
 
 ```xml
-<receiver
+        <receiver
             android:name="de.softgames.sdk.gcm.SGBroadcastReceiver"             
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
@@ -75,10 +77,12 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
  
         <service android:name="de.softgames.sdk.GCMIntentService"/>
 ```
-### 5. Create the `Softgames` class
+### 5. Create the `SoftgamesApplication` class or simply copy this class in your project
 
 Create a class that extends `android.app.Application`, this class will setup the general behaviour.
 This is basically where we set the configurations such as: 
+- Init the Google Analytics tracker
+- Set your Main activity or Launcher activity
 - game name(String)
 - teaser image(resource int id). We suggest to have at least two images for the teaser, one for small screens
   and another for tablets(we use the folder drawable-sw600dp for tablets). 
@@ -86,15 +90,14 @@ This is basically where we set the configurations such as:
 - Internet required(boolean)
 
 ```java
-public class Softgames extends Application {
+public class SoftgamesApplication extends Application {
 
     @Override
     public void onCreate() {
          
-         //Assign the proper value to the constant teaserImgId, you should provide this image
-         private final int teaserImgId = R.drawable.teaser_image;
-         private Drawable teaserImg;
-    
+        // Initializes the GoogleAnalytics tracker object
+        SGSettings.initGAnalyticsTracker(getApplicationContext());
+
         /*
          * Init your app's entry point activity. This is the activity that you
          * want to be called when the app starts
@@ -105,20 +108,20 @@ public class Softgames extends Application {
          * In case your app does not require an active internet connection,
          * please set this VAR as false
          */
-        // SGSettings.setInternetRequired(false);
-        
+        SGSettings.setInternetRequired(true);
+
         /*
-         * You can set with this method the teaser image that is going to be
-         * displayed in the cross-promotion page. This image is related to your game
+         * This method sets the teaser image that is going to be
+         * displayed in the cross-promotion page. This image is related to your
+         * game
          */
-        teaserImg = getResources().getDrawable(teaserImgId);
-        SGSettings.setTeaserImage(teaserImg);
-        
+        SGSettings.setTeaserImage(getResources().getDrawable(
+                R.drawable.teaser_image));
+
         /*
          * Set the name of the game.
-         * */
+         */
         SGSettings.setGameName(getResources().getString(R.string.app_name));
-        super.onCreate();
     }
 }
 ```
@@ -126,50 +129,30 @@ public class Softgames extends Application {
 Add this to your Manifest file. The name attribute of the application item is the path to the softgames class created before.
 ```xml
 <application
-        android:name="THE_PATH_TO_THE_CLASS_THAT_EXTENDS_APPLICATION"
+        android:name="THE_PATH_TO_SOFTGAMES_APPLICATION_CLASS"
         >
-        .
-        .
-        .
+        ...
+        ...
+        
 </application>        
 ```
-## Set up the push notifications
 
-In order to allow us to send push notifications through our SDK you need to do the following in your Main Activity
+### 6. Include the MoreGamesButton view in your game activity
 
-```java
-    // Registrator object used to establish a communication with Google Cloud
-    // messaging
-    public SGRegistrator registrator;
-```
+```xml
+       <view class="de.softgames.sdk.ui.MoreGamesButton"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+```       
 
-In the _onCreate_ method
+### 7. Set up the push notifications
 
-```java
-        /*
-         * You must instantiate this object in order to get working the push
-         * notifications.
-         */
-        registrator = new SGRegistrator(this);
-        
-        /*
-         * this method must be invoked in order to register the device on the
-         * softgames server
-         */
-        registrator.registerMe();        
-```
+The push notifications are automatically set up in the SoftgamesActivity
 
-Finally in the _onDestroy_ method 
-
-```java
-        // This method is called to make sure that the async task initiated by
-        // the registrator is terminated
-        registrator.killTask();
-```
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
- notifications, which is not a major issue since most android devices are associated to a G account. **Android 4.0 and higher do not require this.**
+ notifications, which is not a major issue since most android devices are associated to a Google account. **Android 4.0 and higher do not require this.**
   
 ## Links
 

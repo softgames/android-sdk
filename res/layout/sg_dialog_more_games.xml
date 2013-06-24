@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/sg_bg_dialog"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/sg_gradient_dialog_title" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:text="@string/sg_more_games_title"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                style="@style/SGDialogTitleText" />
+
+            <ImageButton
+                android:id="@+id/sg_dialog_more_games_btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:contentDescription="@string/sg_button_exit"
+                android:paddingBottom="4dp"
+                android:paddingRight="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sg_button_close_dialog_selector" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <de.softgames.sdk.OpenxAdView
+                android:id="@+id/adview_xpromo"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="top|center_horizontal"
+                ox:js_tag_url="afr.php"
+                ox:template="CLEAN"
+                ox:zone_id="@string/sg_zoneXpromoId" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/sg_dialog_title_logo"
+        android:layout_width="44dp"
+        android:layout_height="52dp"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sg_dialog_more_games_logo" />
+
+</FrameLayout>

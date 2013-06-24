@@ -100,7 +100,7 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String URL_PLAIN = "%1$s?zoneid=%2$d&"
             + "viewport_width=%5$s&pixelratio=%6$s&gamename=%7$s&"
-            + "viewport_height=%8$s&conn_type=%9$s&manufacturer=%10$s&language=%11$s&country=%12$s&cb=%4$d&"
+            + "viewport_height=%8$s&conn_type=%9$s&manufacturer=%10$s&language=%11$s&country=%12$s&os=%13$s&osv=%14$s&cb=%4$d&"
             + "charset=UTF-8&source=%3$s";
 
     // Action download html file and inject it in the webview
@@ -138,6 +138,8 @@ public class OpenxAdView extends ViewGroup {
 
     /** The res. */
     private Resources res;
+    
+    private Context context;
 
     private TemplateContext templateContext = new TemplateContext();
 
@@ -150,6 +152,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context) {
         super(context);
+        this.context = context;
         this.res = context.getResources();
         this.webView = new WebView(context);
         initWebView();
@@ -168,6 +171,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.context = context;
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs, defStyle);
@@ -185,6 +189,7 @@ public class OpenxAdView extends ViewGroup {
      */
     public OpenxAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         this.res = context.getResources();
         initAttributes(attrs);
         this.webView = new WebView(context, attrs);
@@ -246,7 +251,9 @@ public class OpenxAdView extends ViewGroup {
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType(),
-                    softgamesAd.getDeviceManufacturer(), softgamesAd.getLocale(), softgamesAd.getCountry());
+                    softgamesAd.getDeviceManufacturer(),
+                    softgamesAd.getLocale(), softgamesAd.getCountry(),
+                    softgamesAd.getOs(), softgamesAd.getOsVersion());
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
         }
@@ -256,7 +263,7 @@ public class OpenxAdView extends ViewGroup {
 
         } else if (mode == DOWNLOAD_HTML) {
             try {
-                DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+                DownloadHtmlTask htmlTask = new DownloadHtmlTask(context);
                 openxHtml = htmlTask.execute(zoneTag).get();
                 return openxHtml;
 
@@ -329,7 +336,7 @@ public class OpenxAdView extends ViewGroup {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
         }
         try {
-            DownloadHtmlTask htmlTask = new DownloadHtmlTask();
+            DownloadHtmlTask htmlTask = new DownloadHtmlTask(context);
             openxHtml = htmlTask.execute(zoneTag).get();
 
         } catch (InterruptedException e) {
@@ -378,7 +385,7 @@ public class OpenxAdView extends ViewGroup {
     }
 
     /**
-     * Load the delivery url in an iframe.
+     * Load the delivery URL in an IFRAME.
      */
     public void loadInIframe() {
 

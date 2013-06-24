@@ -12,7 +12,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center_vertical|center_horizontal"           
-           ox:zone_id="@string/zoneLoadingId"
+           ox:zone_id="@string/sg_zoneLoadingId"
            ox:template="CLEAN"
            ox:js_tag_url="afr.php"/>
     
