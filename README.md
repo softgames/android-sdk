@@ -47,22 +47,23 @@ _General permissions_
 ```
 ### 3. Set the SoftgamesActivity as the launcher activity in the _AndroidManifest.xml_
 ```xml
- <activity
+        <activity
             android:name="de.softgames.sdk.SoftgamesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 ```
+Also notice that the orientation for this actitivity is up to you. Both landscape and protrait orientation are supported. 
+
 ### 4. Add the BroadcastReceiver and the IntentService
 
 Lastly, add the BroadcastReceiver and the IntentService which are required by Google cloud messaging
 
 ```xml
-<receiver
+        <receiver
             android:name="de.softgames.sdk.gcm.SGBroadcastReceiver"             
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
@@ -109,11 +110,6 @@ public class SoftgamesApplication extends Application {
         SGSettings.setInternetRequired(true);
 
         /*
-         * Set here the orientation of the game. Portrait is default
-         */
-        SGSettings.setOrientationLandscape(true);
-
-        /*
          * This method sets the teaser image that is going to be
          * displayed in the cross-promotion page. This image is related to your
          * game
@@ -132,19 +128,18 @@ public class SoftgamesApplication extends Application {
 Add this to your Manifest file. The name attribute of the application item is the path to the softgames class created before.
 ```xml
 <application
-        android:name="THE_PATH_TO_THE_CLASS_THAT_EXTENDS_APPLICATION"
+        android:name="THE_PATH_TO_SOFTGAMES_APPLICATION_CLASS"
         >
-        .
-        .
-        .
+        ...
+        ...
+        
 </application>        
 ```
 
 ### 6. Include the MoreGamesButton view in your game activity
 
 ```xml
-<view
-       class="de.softgames.sdk.ui.MoreGamesButton"
+       <view class="de.softgames.sdk.ui.MoreGamesButton"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
 ```       
