@@ -4,6 +4,7 @@
 package de.softgames.sdk.ui;
 
 
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,10 +16,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
+import de.softgames.sdk.OpenxAdView;
 import de.softgames.sdk.R;
 import de.softgames.sdk.model.SoftgamesNotification;
 import de.softgames.sdk.util.SGSettings;
@@ -26,7 +31,7 @@ import de.softgames.sdk.util.SGSettings;
 
 /**
  * @author rolandcastillo
- *
+ * 
  */
 public final class SoftgamesUI {
 
@@ -101,12 +106,11 @@ public final class SoftgamesUI {
 
         // Bitmap largeNotificationIcon =
         // createLargeIconBitmap(R.drawable.sg_ic_notify_msg);
-        // TODO Determine how is gonna be set the large icon
+        // TODO Determine how is going to be set the large icon
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 context).setSmallIcon(R.drawable.sg_ic_notify_msg)
-                .setContentText(message)
-                .setContentTitle(title);
+                .setContentText(message).setContentTitle(title);
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, launcherActivity);
@@ -148,9 +152,9 @@ public final class SoftgamesUI {
             Bitmap largeNotificationIcon = largeNotificationIconDrawable
                     .getBitmap();
             int height = (int) res
-                    .getDimension(R.dimen.notification_large_icon_height);
+                    .getDimension(R.dimen.sg_notification_large_icon_height);
             int width = (int) res
-                    .getDimension(R.dimen.notification_large_icon_width);
+                    .getDimension(R.dimen.sg_notification_large_icon_width);
             largeNotificationIcon = Bitmap.createScaledBitmap(
                     largeNotificationIcon, width, height, false);
 
@@ -160,6 +164,29 @@ public final class SoftgamesUI {
             Log.e(TAG, "The res variable is not initialized");
             return null;
         }
+    }
+
+    public static Dialog buildMoreGamesDialog(final Context mCtx) {
+
+        final Dialog dialog = new Dialog(mCtx, R.style.SGMoreGamesDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.sg_dialog_more_games);
+        dialog.setCancelable(true);
+
+        OpenxAdView crossPromoAdView = (OpenxAdView) dialog
+                .findViewById(R.id.adview_xpromo);
+        crossPromoAdView.load();
+
+        ImageButton buttonClose = (ImageButton) dialog
+                .findViewById(R.id.sg_dialog_more_games_btn_close);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View paramView) {
+                dialog.dismiss();
+            }
+        });
+
+        return dialog;
     }
 
     /**
@@ -187,7 +214,7 @@ public final class SoftgamesUI {
                 Animation.RELATIVE_TO_PARENT, 0.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f);
-        inFromRight.setDuration(250);
+        inFromRight.setDuration(500);
         inFromRight.setInterpolator(new AccelerateInterpolator());
         return inFromRight;
     }
@@ -200,10 +227,10 @@ public final class SoftgamesUI {
     public static Animation outToLeftAnimation() {
         Animation outToLeft = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, -2.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f);
-        outToLeft.setDuration(250);
+        outToLeft.setDuration(500);
         outToLeft.setInterpolator(new AccelerateInterpolator());
         return outToLeft;
     }

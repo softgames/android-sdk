@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,6 +22,10 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
 
     private static final String TAG = DownloadHtmlTask.class.getSimpleName();
     private static HttpResponse response;
+
+    public DownloadHtmlTask(Context mContext) {
+        super();
+    }
 
     @Override
     protected void onPreExecute() {
@@ -32,6 +37,7 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String result) {
         Log.d(TAG, "Downloaded!");
         super.onPostExecute(result);
+        
     }
 
     @Override
@@ -44,8 +50,9 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
             response = httpclient.execute(httpget);
             // Execute it
             HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent(); // Create an InputStream with
-                                                  // the response
+            InputStream inputStream = entity.getContent(); // Create an
+                                                           // InputStream with
+            // the response
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     inputStream, "utf8"), 8);
             StringBuilder sb = new StringBuilder();
@@ -60,13 +67,12 @@ public class DownloadHtmlTask extends AsyncTask<String, Integer, String> {
             inputStream.close(); // Close the stream
 
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error downloading data");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error downloading data");
         }
 
         return resString;
     }
-
 
 }

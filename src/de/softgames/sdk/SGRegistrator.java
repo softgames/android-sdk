@@ -102,7 +102,7 @@ public class SGRegistrator {
         try {
             GCMRegistrar.onDestroy(ctx);
         } catch (Exception e) {
-            Log.e(TAG, "an error occurred destroying the Activity", e);
+            Log.e(TAG, "An error occurred destroying the Activity, Nothing serious");
         }
     }
 
