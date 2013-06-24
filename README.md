@@ -1,7 +1,7 @@
 # Guide to the Softgames SDK 2.0
 
 _This page describes the Softgames SDK functionality and usage._
-You can always refer to the [Demo App](https://github.com/softgames/android-sdk-demo) we have created to showcase the SDK!
+You can check an example project containing this code  [here](https://github.com/softgames/android-sdk-demo)!
 
 ## Introduction 
 
