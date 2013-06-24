@@ -26,6 +26,20 @@ public class SoftgamesAd {
     private String locale;
     
     private String country;
+    
+    private String os;
+    
+    private String osVersion;
+
+    
+    /**
+     * Gets the game name.
+     * 
+     * @return the game name
+     */
+    public String getGameName() {
+        return gameName;
+    }
 
     /**
      * Instantiates a new softgames ad.
@@ -40,31 +54,34 @@ public class SoftgamesAd {
      *            the pixel ratio
      * @param connectionType
      *            the type of internet connectivity
+     * @param deviceManufacturer
+     *            the manufacturer name
+     * @param locale
+     * @param country
+     * @param os
+     *            Operating system name
+     * @param osVersion
+     *            Operating system version
+     *            
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
-	    Integer viewPortHeight, Float pixelRatio, int connectionType,
-	    String deviceManufacturer, String locale, String country) {
-	super();
-	this.gameName = gameName;
-	this.viewportWidth = viewportWidth;
-	this.viewPortHeight = viewPortHeight;
-	this.pixelRatio = pixelRatio;
-	this.connectionType = connectionType;
-	this.deviceManufacturer = deviceManufacturer;
-	this.locale = locale;
-	this.country = country;
+            Integer viewPortHeight, Float pixelRatio, int connectionType,
+            String deviceManufacturer, String locale, String country,
+            String os, String osVersion) {
+        super();
+        this.gameName = gameName;
+        this.viewportWidth = viewportWidth;
+        this.viewPortHeight = viewPortHeight;
+        this.pixelRatio = pixelRatio;
+        this.connectionType = connectionType;
+        this.deviceManufacturer = deviceManufacturer;
+        this.locale = locale;
+        this.country = country;
+        this.os = os;
+        this.osVersion = osVersion;
     }
 
-    /**
-     * Gets the game name.
-     * 
-     * @return the game name
-     */
-    public String getGameName() {
-        return gameName;
-    }
 
-    
     /**
      * Sets the game name.
      * 
@@ -186,6 +203,22 @@ public class SoftgamesAd {
 		+ ", pixelRatio=" + pixelRatio + ", connectionType="
 		+ connectionType + ", deviceManufacturer=" + deviceManufacturer
 		+ ", locale=" + locale + ", country=" + country + "]";
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os;
+    }
+
+    public String getOsVersion() {
+        return osVersion;
+    }
+
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
     }
 
 

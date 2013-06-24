@@ -82,7 +82,7 @@ public class SGAdView extends FrameLayout implements OnClickListener,
         AdWhirlTargeting.setAge(25);
         AdWhirlTargeting.setGender(AdWhirlTargeting.Gender.FEMALE);
         AdWhirlTargeting.setKeywords("online games gaming");
-        AdWhirlTargeting.setTestMode(true);
+        AdWhirlTargeting.setTestMode(false);
 
         int diWidth = 320;
         int diHeight = 52;

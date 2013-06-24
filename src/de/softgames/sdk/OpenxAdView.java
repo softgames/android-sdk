@@ -100,7 +100,7 @@ public class OpenxAdView extends ViewGroup {
 
     private static final String URL_PLAIN = "%1$s?zoneid=%2$d&"
             + "viewport_width=%5$s&pixelratio=%6$s&gamename=%7$s&"
-            + "viewport_height=%8$s&conn_type=%9$s&manufacturer=%10$s&language=%11$s&country=%12$s&cb=%4$d&"
+            + "viewport_height=%8$s&conn_type=%9$s&manufacturer=%10$s&language=%11$s&country=%12$s&os=%13$s&osv=%14$s&cb=%4$d&"
             + "charset=UTF-8&source=%3$s";
 
     // Action download html file and inject it in the webview
@@ -251,7 +251,9 @@ public class OpenxAdView extends ViewGroup {
                     softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                     softgamesAd.getViewportHeight(),
                     softgamesAd.getConnectionType(),
-                    softgamesAd.getDeviceManufacturer(), softgamesAd.getLocale(), softgamesAd.getCountry());
+                    softgamesAd.getDeviceManufacturer(),
+                    softgamesAd.getLocale(), softgamesAd.getCountry(),
+                    softgamesAd.getOs(), softgamesAd.getOsVersion());
         } catch (UnsupportedEncodingException e) {
             Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
         }

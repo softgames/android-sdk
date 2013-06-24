@@ -16,8 +16,8 @@
         android:background="@drawable/sg_ticker_new_games"
         android:layout_gravity="bottom|left"
         android:gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="4dp"
         android:textStyle="bold"
         android:textSize="12sp"
         android:textColor="#FFFFFF"/>

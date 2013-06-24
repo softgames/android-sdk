@@ -24,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.view.WindowManager;
@@ -58,6 +59,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     private static final int POOL_SIZE = 3;
 
     protected static final int ACTIVITY_RESULT_SETTINGS = 10;
+    
+    private static final String ANDROID_OS = "Android";
 
     /** The schedule task executor. */
     private ScheduledExecutorService scheduleTaskExecutor;
@@ -97,8 +100,13 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.sg_master_layout);
-
+        
+        // We want to show the splash screen and the ads in full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                        
         res = getResources();
         layoutContainer = (RelativeLayout) findViewById(R.id.softgames_master);
         crossPromotionLayout = (LinearLayout) findViewById(R.id.xpromo);
@@ -106,9 +114,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
 
-        // We want to show the splash screen and the ads in full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Keep screen awake
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -157,15 +162,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
 
-        if (isFirstSession()) {
-            // showLoadingScreen();
-            startApp();
-        } else {
-            showCrosspromotion();
-        }
-
-        buttonPlay.setOnClickListener(this);
-        
         /*
          * This object is needed to get working the push notifications.
          */
@@ -175,6 +171,15 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
          * softgames server
          */
         registrator.registerMe();
+
+        if (isFirstSession()) {
+            // showLoadingScreen();
+            startApp();
+        } else {
+            showCrosspromotion();
+        }
+
+        buttonPlay.setOnClickListener(this);
 
     }
 
@@ -207,7 +212,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 .getConnectionType(getApplicationContext());
         SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
                 display.getWidth(), display.getHeight(), density,
-                connectionType, Build.MANUFACTURER, language, countryCode);
+                connectionType, Build.MANUFACTURER, language, countryCode, ANDROID_OS, Build.VERSION.RELEASE);
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
 
@@ -250,7 +255,12 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
      */
     private void startApp() {
         Log.d(TAG, "startApp()");
-        registrator.killTask();
+        try {
+            registrator.killTask();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
         try {
             // The launcher activity set by the user as entry point is
             // instantiated
@@ -285,7 +295,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 crossPromotionLayout.setVisibility(View.GONE);
                 loadingScreenLayout.setVisibility(View.VISIBLE);
 
-                mTracker.sendView("/LoadingScreen");
+                
                 // Thread to show the ads during the given seconds
                 scheduleTaskExecutor.schedule(new Runnable() {
                     @Override
@@ -378,7 +388,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.button_play) {
             // showLoadingScreen();
-            crossPromotionLayout.startAnimation(AnimationUtils.loadAnimation(SoftgamesActivity.this, android.R.anim.fade_out));
+            crossPromotionLayout.startAnimation(AnimationUtils.loadAnimation(
+                    SoftgamesActivity.this, android.R.anim.fade_out));
             startApp();
         }
     }
