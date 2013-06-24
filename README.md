@@ -1,6 +1,7 @@
 # Guide to the Softgames SDK 2.0
 
 _This page describes the Softgames SDK functionality and usage._
+You can always refer to the [Demo App](https://github.com/softgames/android-sdk-demo) we have created to showcase the SDK!
 
 ## Introduction 
 
@@ -151,7 +152,7 @@ The push notifications are automatically set up in the SoftgamesActivity
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
- notifications, which is not a major issue since most android devices are associated to a G account. **Android 4.0 and higher do not require this.**
+ notifications, which is not a major issue since most android devices are associated to a Google account. **Android 4.0 and higher do not require this.**
   
 ## Links
 
