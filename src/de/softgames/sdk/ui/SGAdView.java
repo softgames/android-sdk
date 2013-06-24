@@ -8,34 +8,33 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-import com.adwhirl.AdWhirlLayout;
-import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
-import com.adwhirl.AdWhirlManager;
-import com.adwhirl.AdWhirlTargeting;
+import com.google.ads.Ad;
+import com.google.ads.AdListener;
+import com.google.ads.AdRequest.ErrorCode;
+import com.google.ads.AdView;
 
 import de.softgames.sdk.R;
 
 
 /**
- * The Custom view for ads via Adwhirl.
+ * The Custom view for ads via Admob.
  * 
  * @author rolandcastillo@softgames.de
  */
-public class SGAdView extends FrameLayout implements OnClickListener,
-        AdWhirlInterface {
+public class SGAdView extends FrameLayout implements AdListener {
 
     /** The context. */
     private Context mContext;
 
     /** The button more games. */
     private ImageButton buttonNoAds;
-    
-    /** The adWhirl layout. */
-    private AdWhirlLayout adWhirlLayout;
+
+    /** The admob layout. */
+    private AdView admobView;
+ 
 
     /**
      * Instantiates a new more games button.
@@ -43,7 +42,7 @@ public class SGAdView extends FrameLayout implements OnClickListener,
      * @param context
      *            the context
      */
-    public SGAdView(Context context) {
+    public SGAdView(Context context, OnClickListener listener) {
         super(context);
         this.mContext = context;
         initComponents();
@@ -67,31 +66,18 @@ public class SGAdView extends FrameLayout implements OnClickListener,
      * Inits the components.
      */
     private void initComponents() {
-        initContainer();        
-        initAdwhirl();
+        initContainer();
+        initAdView();
         initButton();
     }
 
-    // TODO provide an interface to set the adwhirl parameters
     /**
-     * Inits the adwhirl view.
+     * Inits the admob view.
      */
-    private void initAdwhirl() {
-        AdWhirlManager.setConfigExpireTimeout(1000 * 60 * 5);
+    private void initAdView() {
 
-        AdWhirlTargeting.setAge(25);
-        AdWhirlTargeting.setGender(AdWhirlTargeting.Gender.FEMALE);
-        AdWhirlTargeting.setKeywords("online games gaming");
-        AdWhirlTargeting.setTestMode(false);
-
-        int diWidth = 320;
-        int diHeight = 52;
-        float density = getResources().getDisplayMetrics().density;
-
-        adWhirlLayout = (AdWhirlLayout) this.findViewById(R.id.adWhirlLayout);
-        adWhirlLayout.setAdWhirlInterface(this);
-        adWhirlLayout.setMaxWidth((int) (diWidth * density));
-        adWhirlLayout.setMaxHeight((int) (diHeight * density));
+        admobView = (AdView) this.findViewById(R.id.admobView);
+        admobView.setAdListener(this);
 
     }
 
@@ -110,23 +96,37 @@ public class SGAdView extends FrameLayout implements OnClickListener,
      */
     private void initButton() {
         buttonNoAds = (ImageButton) this.findViewById(R.id.sg_button_no_ads);
-        buttonNoAds.setOnClickListener(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
-    @Override
-    public void onClick(View v) {
-        // Call the purchase flow
+                
     }
 
     @Override
-    public void adWhirlGeneric() {
+    public void onDismissScreen(Ad arg0) {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onLeaveApplication(Ad arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onPresentScreen(Ad arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onReceiveAd(Ad arg0) {
+        buttonNoAds.setVisibility(View.VISIBLE);        
+    }
+
 
 }
