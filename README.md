@@ -45,6 +45,7 @@ _General permissions_
 ```xml   
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 ```
 ### 3. Set the SoftgamesActivity as the launcher activity in the _AndroidManifest.xml_
 ```xml
