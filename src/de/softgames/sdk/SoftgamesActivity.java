@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.adeven.adjustio.AdjustIo;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
@@ -114,7 +115,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
 
-
         // Keep screen awake
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -159,6 +159,9 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         if (SGSettings.getTeaserImage() != null) {
             teaserImage.setImageDrawable(SGSettings.getTeaserImage());
         }
+        
+        //This tells AdjustIo about the launch of the Application.
+        AdjustIo.appDidLaunch(getApplication());
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
 

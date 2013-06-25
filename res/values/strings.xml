@@ -3,6 +3,7 @@
     <string name="sg_app_name">SoftgamesSDK 2.0</string>
     <string name="sg_zoneLoadingId">274</string>
     <string name="sg_zoneXpromoId">273</string>
+    <string name="sg_zoneMoreGameButtonId">320</string>
     <string name="sg_offline_retry_msg">Please check your Internet connection!</string>
     <string name="sg_button_retry">Retry</string>
     <string name="sg_button_exit">Settings</string>

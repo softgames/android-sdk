@@ -1,5 +1,6 @@
 package de.softgames.sdk;
 
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
@@ -88,6 +89,8 @@ public class OpenxAdView extends ViewGroup {
     /** The Constant PARAMETER_SOURCE. */
     private static final String PARAMETER_SOURCE = "source";
 
+    private static final String PARAMETER_AUTOLOAD = "autoload";
+
     private static final String PARAMETER_TEMPLATE = "template";
 
     /** The Constant JS_TAG. used by the script type ajs.php */
@@ -108,7 +111,6 @@ public class OpenxAdView extends ViewGroup {
 
     // Action open the url in an iframe
     private static final int IN_IFRAME = 1;
-
 
     /** The softgames ad. */
     private static SoftgamesAd softgamesAd;
@@ -131,6 +133,9 @@ public class OpenxAdView extends ViewGroup {
     /** The source. */
     private String source;
 
+    /** Whether it is loaded automatically */
+    private boolean isAutoLoad = false;
+
     private String template = SGTemplate.CLEAN.getValue();
 
     /** The prng. */
@@ -138,11 +143,10 @@ public class OpenxAdView extends ViewGroup {
 
     /** The res. */
     private Resources res;
-    
+
     private Context context;
 
     private TemplateContext templateContext = new TemplateContext();
-
 
     /**
      * Initialize widget.
@@ -209,8 +213,8 @@ public class OpenxAdView extends ViewGroup {
         setHasHTTPS(attrs);
         setSource(attrs);
         setTemplate(attrs);
+        setAutoLoad(attrs);
     }
-
 
     /**
      * Inits the web view.
@@ -228,6 +232,11 @@ public class OpenxAdView extends ViewGroup {
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new OpenXAdWebChromeClient());
         webView.clearCache(true);
+        
+        if (isAutoLoad) {
+            webView.setWebViewClient(new OpenXAdWebViewClient());
+        }
+        
         addView(webView);
     }
 
@@ -368,7 +377,11 @@ public class OpenxAdView extends ViewGroup {
     protected void onFinishInflate() {
         super.onFinishInflate();
         // If you do not want to load the ad manually comment this line out
-        // load();
+        if (isAutoLoad) {
+            load();
+            webView.setBackgroundColor(0x00000000); // transparent
+        }
+
     }
 
     /**
@@ -416,7 +429,6 @@ public class OpenxAdView extends ViewGroup {
             Log.w(LOGTAG, "deliveryURL is empty");
         }
     }
-
 
     /**
      * Gets the delivery url.
@@ -649,6 +661,19 @@ public class OpenxAdView extends ViewGroup {
 
     public void setWebView(WebView webView) {
         this.webView = webView;
+    }
+
+    public void setAutoLoad(AttributeSet attrs) {
+        int autoload_rs = attrs.getAttributeResourceValue(ATTRS_NS,
+                PARAMETER_AUTOLOAD, -1);
+        if (autoload_rs != -1) {
+            this.isAutoLoad = Boolean.valueOf(res.getString(autoload_rs));
+        } else {
+            boolean autoload = Boolean.valueOf(attrs.getAttributeValue(
+                    ATTRS_NS, PARAMETER_AUTOLOAD));
+            this.isAutoLoad = autoload;
+
+        }
     }
 
 }
