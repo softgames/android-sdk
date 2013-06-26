@@ -7,14 +7,15 @@ You can check an example project containing this code  [here](https://github.com
 
 This SDK integrates the standard Softgames features intended to be included in the the games sponsored by the company.
  
-## Prerequisites 
+## The following libraries are already included in the SDK. 
 
 * Android 8 or higher 
-* Android support library v4 *
-* Google Cloud Messaging library *
-* Google analytics library v2 *
+* Android support library v4 
+* Google Cloud Messaging library 
+* Google analytics library v2 
+* Admob sdk 
+* Adjust.io 
 
-(*)Already included in the sdk
 
 ## How to setup 
 
@@ -86,8 +87,9 @@ This is basically where we set the configurations such as:
 - game name(String)
 - teaser image(resource int id). We suggest to have at least two images for the teaser, one for small screens
   and another for tablets(we use the folder drawable-sw600dp for tablets). 
-  ***The suggested dimensions of this image are 300x180 for phones and 600x360 for tablets.***
-- Internet required(boolean)
+  ***The suggested dimensions of this image are,*** 
+  _Portrait orientation_: 300x180 for phones and 600x360 for tablets.
+  _Landscape orientation_: 180x300 for phones and 360x600 for tablets.
 
 ```java
 public class SoftgamesApplication extends Application {
@@ -103,12 +105,6 @@ public class SoftgamesApplication extends Application {
          * want to be called when the app starts
          */
         SGSettings.setLauncherActivity(SDKDemoActivity.class);
-
-        /*
-         * In case your app does not require an active internet connection,
-         * please set this VAR as false
-         */
-        SGSettings.setInternetRequired(true);
 
         /*
          * This method sets the teaser image that is going to be
@@ -164,9 +160,11 @@ Insert the following xml code in your main layout and position it in the most co
 
 The banner includes a close button which allows the user to disable the ads. In order to get working this button you need 
 to trigger the google purchase flow for the product with key(SKU) "NO_ADS".
+```java
+  private ImageButton sgButtonNoAds;
+```
 
 ```java
-
         sgButtonNoAds =  (ImageButton) findViewById(R.id.sg_button_no_ads);
         sgButtonNoAds.setOnClickListener(new OnClickListener() {            
             @Override
