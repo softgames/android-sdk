@@ -20,6 +20,8 @@ public final class SGSettings {
 
     /** The Constant FIRST_SESSION to use as key in the SharedPreferences file. */
     public static final String FIRST_SESSION = "firstSession";
+    
+    public static final String INSTALLATION_DATE = "installationDate";
 
     /** The Constant SPLASH_DELAY in seconds. */
     public static final int SPLASH_DELAY = 3;
