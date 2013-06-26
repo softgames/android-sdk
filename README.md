@@ -244,15 +244,16 @@ AdjustIo.trackEvent("abc123");
 
 The below will show you the different events, which need to be tracked in your game. The Token´s are example ones to check the integration.
 
-_Tutorial tracking events:_
+***Tutorial tracking events:***
+```
+_Name:_ Tutorial started example 
+_Token:_ w651i4
 
-Name: Tutorial started example 
-Token: w651i4
+_Name:_ Tutorial finished example 
+_Token:_ jld06t
+```
 
-Name: Tutorial finished example 
-Token: jld06t
-
-_Facebook:_
+***Facebook:***
 
 Name: User connected to Facebook example 
 Token: kgtzuv
