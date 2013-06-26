@@ -252,20 +252,16 @@ public class OpenxAdView extends ViewGroup {
         Log.d(LOGTAG, "getZoneTemplateHtml() zoneID: " + zoneID);
         String openxHtml = "", zoneTag = "";
 
-        try {
-            zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://"
-                    : "http://") + deliveryURL + '/' + jsTagURL, zoneID,
-                    source == null ? "" : URLEncoder.encode(source, "utf-8"),
-                    prng.nextLong(), softgamesAd.getViewportWidth(),
-                    softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
-                    softgamesAd.getViewportHeight(),
-                    softgamesAd.getConnectionType(),
-                    softgamesAd.getDeviceManufacturer(),
-                    softgamesAd.getLocale(), softgamesAd.getCountry(),
-                    softgamesAd.getOs(), softgamesAd.getOsVersion(), softgamesAd.getIpAddress());
-        } catch (UnsupportedEncodingException e) {
-            Log.wtf(LOGTAG, "UTF-8 not supported?!", e);
-        }
+        zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://" : "http://")
+                + deliveryURL + '/' + jsTagURL, zoneID, getSource() == null ? "pre" : getSource(),
+                prng.nextLong(), softgamesAd.getViewportWidth(),
+                softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
+                softgamesAd.getViewportHeight(),
+                softgamesAd.getConnectionType(),
+                softgamesAd.getDeviceManufacturer(), softgamesAd.getLocale(),
+                softgamesAd.getCountry(), softgamesAd.getOs(),
+                softgamesAd.getOsVersion(), softgamesAd.getIpAddress());
+
         if (mode == IN_IFRAME) {
             templateContext.setTemplateStratgy(new IframeTemplate());
             return templateContext.getTemplate(zoneTag);
