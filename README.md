@@ -193,6 +193,30 @@ to trigger the google purchase flow for the product with key(SKU) "NO_ADS".
 
 The push notifications are automatically set up in the SoftgamesActivity
 
+## Add tracking of revenue
+
+If your users can generate revenue by clicking on advertisements you can track those revenues. If the click is worth one Cent, you could make the following call to track that revenue:
+
+```java 
+AdjustIo.trackRevenue(1.0f);
+```
+
+The parameter is supposed to be in Cents and will get rounded to one decimal point. If you want to differentiate between different kinds of revenue you can get different eventIds for each kind. Again, you need to ask us for eventIds that you can then use. In that case you would make a call like this:
+
+```java
+AdjustIo.trackRevenue(1.0f, "abc123");
+```
+You can also register a callback URL again and provide a map of named parameters, just like it worked with normal events.
+
+```java
+Map<String, String> parameters = new HashMap<String, String>();
+parameters.put("key", "value");
+parameters.put("foo", "bar");
+AdjustIo.trackRevenue(1.0f, "abc123", parameters);
+```
+
+In any case, don't forget to import AdjustIo. Again, there is no point in sending parameters if you haven't registered a callback URL for that revenue event.
+
 ## Known issues
 
 1. The google cloud messaging requires the user to be logged in with a google account in order to send push
