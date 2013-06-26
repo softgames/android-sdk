@@ -174,6 +174,12 @@ Insert the following xml code in your main layout and position it in the most co
        android:layout_height="wrap_content"/>
 ```
 
+We will give you also a admob key which you should add in the `strings.xml` file like this
+
+```xml
+<string name="sg_admob_key">asdf1234</string>
+```
+
 The banner includes a close button which allows the user to disable the ads. In order to get working this button you need 
 to trigger the google purchase flow for the product with key(SKU) "NO_ADS".
 ```java
