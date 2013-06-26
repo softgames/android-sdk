@@ -10,9 +10,7 @@
     <application>
         <activity
             android:name="de.softgames.sdk.SoftgamesActivity"
-            android:label="@string/sg_app_name"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:label="@string/sg_app_name">
         </activity>
     </application>
 

@@ -12,40 +12,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
+import de.softgames.sdk.OpenxAdView;
 import de.softgames.sdk.R;
 
 
 /**
  * The Custom Button MoreGamesButton.
- *
+ * 
  * @author rolandcastillo@softgames.de
  */
-public class MoreGamesButton extends FrameLayout implements OnClickListener{
-    
+public class MoreGamesButton extends FrameLayout implements OnClickListener {
 
     /** The context. */
     private Context mContext;
-    
+
     /** The button more games. */
-    private ImageButton buttonMoreGames;
-    
+    private OpenxAdView buttonMoreGames;
+
     /** The new games ticker. */
-    private TextView newGamesTicker;
-    
+    // private TextView newGamesTicker;
+
     /** The Google tracker. */
     private Tracker mTracker;
-    
 
     /**
      * Instantiates a new more games button.
-     *
-     * @param context the context
+     * 
+     * @param context
+     *            the context
      */
     public MoreGamesButton(Context context) {
         super(context);
@@ -55,9 +53,11 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener{
 
     /**
      * Instantiates a new more games button.
-     *
-     * @param context the context
-     * @param attrs the attributes
+     * 
+     * @param context
+     *            the context
+     * @param attrs
+     *            the attributes
      */
     public MoreGamesButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -71,43 +71,48 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener{
     private void initComponents() {
         initContainer();
         initButton();
-        initTicker();
+        // initTicker();
     }
 
     /**
      * Inits the container.
      */
     private void initContainer() {
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.sg_button_more_games_layout, this, true);
-        setClickable(true);
+        //setClickable(true);
     }
 
     /**
      * Inits the ticker with a random number.
      */
-    private void initTicker() {
-        newGamesTicker = (TextView) this.findViewById(R.id.sg_ticker_button_more_games);        
-        newGamesTicker.setText(getRandomNumber(1, 6) + "");
-    }
+    // private void initTicker() {
+    // newGamesTicker = (TextView)
+    // this.findViewById(R.id.sg_ticker_button_more_games);
+    // newGamesTicker.setText(getRandomNumber(1, 6) + "");
+    // }
 
     /**
      * Inits the button.
      */
     private void initButton() {
-        buttonMoreGames = (ImageButton) this.findViewById(R.id.sg_button_more_games);
-        buttonMoreGames.setOnClickListener(this);
+        buttonMoreGames = (OpenxAdView) this
+                .findViewById(R.id.sg_button_more_games);
+        
     }
 
     /**
      * Gets the random number.
-     *
-     * @param low the low
-     * @param high the high
+     * 
+     * @param low
+     *            the low
+     * @param high
+     *            the high
      * @return the random number
      */
     private int getRandomNumber(int low, int high) {
-        Random random = new Random();        
+        Random random = new Random();
         return random.nextInt(high - low) + low;
     }
 
@@ -122,13 +127,14 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener{
         mTracker.sendView("/MoreGamesScreen");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.view.View.OnClickListener#onClick(android.view.View)
      */
     @Override
-    public void onClick(View v) {
-        SoftgamesUI.buildMoreGamesDialog(mContext).show();
-        trackEvent();
+    public void onClick(View v) {        
+        //trackEvent();
     }
 
 }
