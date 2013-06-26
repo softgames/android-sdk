@@ -168,6 +168,7 @@ Insert the following xml code in your main layout and position it in the most co
 
 ```xml
    <view 
+       android:id="@+id/sg_adview"
        class="de.softgames.sdk.ui.SGAdView"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
@@ -244,6 +245,7 @@ AdjustIo.trackEvent("abc123");
 The below will show you the different events, which need to be tracked in your game. The Token´s are example ones to check the integration.
 
 _Tutorial tracking events:_
+
 Name: Tutorial started example 
 Token: w651i4
 
@@ -251,6 +253,7 @@ Name: Tutorial finished example
 Token: jld06t
 
 _Facebook:_
+
 Name: User connected to Facebook example 
 Token: kgtzuv
 
