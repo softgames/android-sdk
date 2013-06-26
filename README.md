@@ -20,7 +20,7 @@ This SDK integrates the standard Softgames features intended to be included in t
 
 In order to setup the project you need to follow the next steps:
 
-### 1. Add the Softgames SDK as a library<a href="#setup-1">&nbsp;</a>
+### 1. Import the SofgamesSDK project into your workspace and add is as a library project <a href="#setup-1">&nbsp;</a>
 
 Eclipse->Project Preferences->Android->Add
 
@@ -140,12 +140,43 @@ Add this to your Manifest file. The name attribute of the application item is th
 ### 6. Include the MoreGamesButton view in your game activity
 
 ```xml
-       <view class="de.softgames.sdk.ui.MoreGamesButton"
+   <view class="de.softgames.sdk.ui.MoreGamesButton"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
 ```       
 
-### 7. Set up the push notifications
+### 7. Set up the banner for ads
+
+Add the Admob activity to your manifest
+```xml
+<activity android:name="com.google.ads.AdActivity"
+          android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+```
+
+Insert the following xml code in your main layout and position it in the most convenient area of the screen. 
+
+```xml
+   <view 
+       class="de.softgames.sdk.ui.SGAdView"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+```
+
+The banner includes a close button which allows the user to disable the ads. In order to get working this button you need 
+to trigger the google purchase flow for the product with key(SKU) "NO_ADS".
+
+```java
+
+        sgButtonNoAds =  (ImageButton) findViewById(R.id.sg_button_no_ads);
+        sgButtonNoAds.setOnClickListener(new OnClickListener() {            
+            @Override
+            public void onClick(View v) {
+                // TODO Launch here the purchase flow for the no ads product 
+            }
+        });
+```
+
+### 8. Set up the push notifications
 
 The push notifications are automatically set up in the SoftgamesActivity
 
