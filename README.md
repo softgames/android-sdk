@@ -6,16 +6,14 @@ You can check an example project containing this code  [here](https://github.com
 ## Introduction 
 
 This SDK integrates the standard Softgames features intended to be included in the the games sponsored by the company.
- 
-## The following libraries are already included in the SDK. 
-
+### Prerequisites
 * Android 8 or higher 
+### Libraries included in the SDK. 
 * Android support library v4 
 * Google Cloud Messaging library 
 * Google analytics library v2 
 * Admob sdk 
 * Adjust.io 
-
 
 ## How to setup 
 
