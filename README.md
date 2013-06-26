@@ -228,10 +228,10 @@ AdjustIo.trackRevenue(1.0f, "abc123");
 
 Example: 
 Purchase of Packages: (Here each available package of the game needs to be tracked)
-
+```
 Name: User buys Package 1 
 Token: lkc7ft
-
+```
 The tokens are provided by us.
 
 
@@ -246,21 +246,21 @@ The below will show you the different events, which need to be tracked in your g
 
 ***Tutorial tracking events:***
 ```
-_Name:_ Tutorial started example 
-_Token:_ w651i4
+Name: Tutorial started example 
+Token: w651i4
 
-_Name:_ Tutorial finished example 
-_Token:_ jld06t
+Name: Tutorial finished example 
+Token: jld06t
 ```
 
 ***Facebook:***
-
+```
 Name: User connected to Facebook example 
 Token: kgtzuv
 
 Name: User posted via Facebook example 
 Token: gz9w80
-
+```
 
 ## Known issues
 
