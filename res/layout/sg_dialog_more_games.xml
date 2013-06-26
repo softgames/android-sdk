@@ -54,6 +54,7 @@
                 android:layout_gravity="top|center_horizontal"
                 ox:js_tag_url="afr.php"
                 ox:template="CLEAN"
+                ox:source="ingame"
                 ox:zone_id="@string/sg_zoneXpromoId" />
         </LinearLayout>
     </LinearLayout>
