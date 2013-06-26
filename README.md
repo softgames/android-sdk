@@ -21,7 +21,7 @@ This SDK integrates the standard Softgames features intended to be included in t
 
 In order to setup the project you need to follow the next steps:
 
-### 1. Import the SofgamesSDK project into your workspace and add is as a library project <a href="#setup-1">&nbsp;</a>
+### 1. Import the SofgamesSDK project into your workspace and add it as a library project <a href="#setup-1">&nbsp;</a>
 
 Eclipse->Project Preferences->Android->Add
 
