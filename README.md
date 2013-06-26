@@ -253,6 +253,19 @@ Name: Tutorial finished example
 Token: jld06t
 ```
 
+***User level*** 
+```
+(Levels tracked will be 1-20 in each level and then 25, 30, 40 and 50)
+
+Name: User reaches Level 1 example 
+Token: typ37r
+Name: User reaches Level 2 example 
+Token: awo68t
+…
+Name: User reaches Level 30 example 
+Token: 5j0kih
+```
+
 ***Facebook:***
 ```
 Name: User connected to Facebook example 
