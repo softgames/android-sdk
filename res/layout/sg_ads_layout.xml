@@ -12,7 +12,7 @@
         android:layout_marginRight="18dp"
         android:layout_marginTop="20dp"
         ads:adSize="BANNER"
-        ads:adUnitId="a151790cbb482ed"
+        ads:adUnitId="@string/sg_admob_key"
         ads:loadAdOnCreate="true"/>
 
     <ImageButton

@@ -134,7 +134,7 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener {
      */
     @Override
     public void onClick(View v) {        
-        trackEvent();
+        //trackEvent();
     }
 
 }

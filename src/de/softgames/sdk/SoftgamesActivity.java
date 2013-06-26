@@ -5,11 +5,14 @@
 package de.softgames.sdk;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,10 +27,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -122,7 +125,9 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         GoogleAnalytics mInstance = GoogleAnalytics.getInstance(this);
         // Get the existing tracker
         mTracker = mInstance.getDefaultTracker();
-
+        
+        boolean isFirstSession = isFirstSession();
+        
         // Let's initialize the ad related objects
         initOpenxAds();
 
@@ -175,7 +180,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
          */
         registrator.registerMe();
 
-        if (isFirstSession()) {
+        if (isFirstSession) {
             // showLoadingScreen();
             startApp();
         } else {
@@ -213,9 +218,13 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
         int connectionType = NetworkUtilities
                 .getConnectionType(getApplicationContext());
+        String ipAddress = NetworkUtilities.getLocalIpAddress(getApplicationContext());
+        
         SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
                 display.getWidth(), display.getHeight(), density,
-                connectionType, Build.MANUFACTURER, language, countryCode, ANDROID_OS, Build.VERSION.RELEASE);
+                connectionType, Build.MANUFACTURER, language, countryCode,
+                ANDROID_OS, Build.VERSION.RELEASE,
+                ipAddress);
         Log.d(TAG, softgamesAd.toString());
         OpenxAdView.setSoftgamesAd(softgamesAd);
 
@@ -225,6 +234,21 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         }
         mTracker.sendEvent("internet_connection", sInternetStatus,
                 Long.valueOf(connectionType) + "", Long.valueOf(connectionType));
+        
+        //TODO TBD the installation date, should it be an event? 
+        mTracker.sendEvent("user_info", "installation_date",
+                getInstallationDate(), 0L);
+    }
+
+    private String getInstallationDate() {
+        // Restore preferences
+        SharedPreferences sgSettings = getSharedPreferences(
+                SGSettings.PREFS_NAME, 0);
+
+        String installationDate = sgSettings.getString(
+                SGSettings.INSTALLATION_DATE, getCurrentDate());
+        
+        return installationDate;
     }
 
     /**
@@ -376,6 +400,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 Log.d(TAG, "This is the very first session");
                 SharedPreferences.Editor editor = sgSettings.edit();
                 editor.putBoolean(SGSettings.FIRST_SESSION, false);
+                editor.putString(SGSettings.INSTALLATION_DATE, getCurrentDate());
                 editor.commit();
                 return true;
             } else {
@@ -385,6 +410,15 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
             Log.e(TAG, "", e);
             return true;
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = dateFormat.format(calendar.getTime());
+        Log.e(TAG, currentDate);
+        return currentDate;
     }
 
     @Override

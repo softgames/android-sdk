@@ -1,10 +1,16 @@
 package de.softgames.sdk.util;
 
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
 import android.util.Log;
 
 
@@ -77,6 +83,32 @@ public class NetworkUtilities {
             return NetworkType.UNKNOWN.getValue();
         }
 
+    }
+    
+    /**
+     * Gets the local IP address.
+     *
+     * @return the IP address
+     */
+    public static String getLocalIpAddress(Context ctx) {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = (NetworkInterface) en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = (InetAddress) enumIpAddr
+                            .nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return Formatter.formatIpAddress(inetAddress.hashCode());
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e(TAG, ex.toString());
+        }
+        return null;
+        
     }
 
     /**

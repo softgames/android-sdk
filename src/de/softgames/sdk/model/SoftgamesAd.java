@@ -2,7 +2,7 @@ package de.softgames.sdk.model;
 
 
 /**
- * The Entity Class SoftgamesAd to encapsulate all the ad related attributes
+ * The Entity Class SoftgamesAd to encapsulate all the ads related attributes
  */
 public class SoftgamesAd {
 
@@ -22,16 +22,17 @@ public class SoftgamesAd {
     private int connectionType;
 
     private String deviceManufacturer;
-    
+
     private String locale;
-    
+
     private String country;
-    
+
     private String os;
-    
+
     private String osVersion;
 
-    
+    private String ipAddress;
+
     /**
      * Gets the game name.
      * 
@@ -62,12 +63,12 @@ public class SoftgamesAd {
      *            Operating system name
      * @param osVersion
      *            Operating system version
-     *            
+     * 
      */
     public SoftgamesAd(String gameName, Integer viewportWidth,
             Integer viewPortHeight, Float pixelRatio, int connectionType,
             String deviceManufacturer, String locale, String country,
-            String os, String osVersion) {
+            String os, String osVersion, String ipAddress) {
         super();
         this.gameName = gameName;
         this.viewportWidth = viewportWidth;
@@ -79,8 +80,8 @@ public class SoftgamesAd {
         this.country = country;
         this.os = os;
         this.osVersion = osVersion;
+        this.ipAddress = ipAddress;
     }
-
 
     /**
      * Sets the game name.
@@ -168,7 +169,6 @@ public class SoftgamesAd {
         this.connectionType = connectionType;
     }
 
-
     public String getDeviceManufacturer() {
         return deviceManufacturer;
     }
@@ -181,28 +181,16 @@ public class SoftgamesAd {
         return locale;
     }
 
-
     public void setLocale(String locale) {
         this.locale = locale;
     }
-
 
     public String getCountry() {
         return country;
     }
 
-
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    @Override
-    public String toString() {
-	return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
-		+ viewportWidth + ", viewPortHeight=" + viewPortHeight
-		+ ", pixelRatio=" + pixelRatio + ", connectionType="
-		+ connectionType + ", deviceManufacturer=" + deviceManufacturer
-		+ ", locale=" + locale + ", country=" + country + "]";
     }
 
     public String getOs() {
@@ -221,5 +209,22 @@ public class SoftgamesAd {
         this.osVersion = osVersion;
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "SoftgamesAd [gameName=" + gameName + ", viewportWidth="
+                + viewportWidth + ", viewPortHeight=" + viewPortHeight
+                + ", pixelRatio=" + pixelRatio + ", connectionType="
+                + connectionType + ", deviceManufacturer=" + deviceManufacturer
+                + ", locale=" + locale + ", country=" + country + ", os=" + os
+                + ", osVersion=" + osVersion + ", ipAddress=" + ipAddress + "]";
+    }
 
 }
