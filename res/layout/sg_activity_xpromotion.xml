@@ -85,6 +85,7 @@
 	        ox:js_tag_url="afr.php"
 	        ox:template="CLEAN"
 	        ox:zone_id="@string/sg_zoneXpromoId" 
+	        ox:source="pre"
 	        android:layout_gravity="top|center_horizontal"/>
 	</LinearLayout>
 </LinearLayout>
