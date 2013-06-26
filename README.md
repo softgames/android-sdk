@@ -189,33 +189,74 @@ to trigger the google purchase flow for the product with key(SKU) "NO_ADS".
         });
 ```
 
+Of course once the user has purchased the no ads product you have to hide it. One way to do this would be like this:
+
+```java
+private SGAdView sgAdView;
+```
+
+```java
+public void hideBannerAds(){
+        runOnUiThread(new Runnable() {            
+            @Override
+            public void run() {
+                sgAdView = (SGAdView) findViewById(R.id.sg_adview);
+                sgAdView.setVisibility(View.GONE);                
+            }
+        });
+}
+```
 ### 8. Set up the push notifications
 
 The push notifications are automatically set up in the SoftgamesActivity
 
 ## Add tracking of revenue
 
-If your users can generate revenue by clicking on advertisements you can track those revenues. If the click is worth one Cent, you could make the following call to track that revenue:
+If users purchase premium packages and generate revenue we want to automatically track those revenues. You need to set this up for each available package. Example: If a package click is worth one Cent, you could make the following call to track that revenue:
 
-```java 
+```java
 AdjustIo.trackRevenue(1.0f);
 ```
 
-The parameter is supposed to be in Cents and will get rounded to one decimal point. If you want to differentiate between different kinds of revenue you can get different eventIds for each kind. Again, you need to ask us for eventIds that you can then use. In that case you would make a call like this:
+The parameter is supposed to be in Cents and will get rounded to one decimal point. If you have more than 1 package - you can get different eventIds for each kind. Again, you need to ask us for eventIds that you can then use. In that case you would make a call like this:
 
 ```java
+// The second parameter is the token provided by us
 AdjustIo.trackRevenue(1.0f, "abc123");
 ```
-You can also register a callback URL again and provide a map of named parameters, just like it worked with normal events.
+
+Example: 
+Purchase of Packages: (Here each available package of the game needs to be tracked)
+
+Name: User buys Package 1 
+Token: lkc7ft
+
+The tokens are provided by us.
+
+
+## Add tracking of events
 
 ```java
-Map<String, String> parameters = new HashMap<String, String>();
-parameters.put("key", "value");
-parameters.put("foo", "bar");
-AdjustIo.trackRevenue(1.0f, "abc123", parameters);
+//The parameter is the token provided by us
+AdjustIo.trackEvent("abc123");
 ```
 
-In any case, don't forget to import AdjustIo. Again, there is no point in sending parameters if you haven't registered a callback URL for that revenue event.
+The below will show you the different events, which need to be tracked in your game. The Token´s are example ones to check the integration.
+
+_Tutorial tracking events:_
+Name: Tutorial started example 
+Token: w651i4
+
+Name: Tutorial finished example 
+Token: jld06t
+
+_Facebook:_
+Name: User connected to Facebook example 
+Token: kgtzuv
+
+Name: User posted via Facebook example 
+Token: gz9w80
+
 
 ## Known issues
 
