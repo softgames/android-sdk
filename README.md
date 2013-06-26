@@ -60,9 +60,9 @@ _General permissions_
 ```
 Also notice that the orientation for this actitivity is up to you. Both landscape and protrait orientation are supported. 
 
-### 4. Add the BroadcastReceiver and the IntentService
+### 4. Add BroadcastReceivers and IntentServices
 
-Lastly, add the BroadcastReceiver and the IntentService which are required by Google cloud messaging
+Lastly, add the BroadcastReceiver and the IntentService which are required by Google cloud messaging and Google analytics
 
 ```xml
         <receiver
@@ -78,6 +78,20 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
  
         <service android:name="de.softgames.sdk.GCMIntentService"/>
 ```
+
+```xml
+        <!-- Used for install referral measurement -->
+        <service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />
+
+        <receiver
+            android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+```
+
 ### 5. Create the `SoftgamesApplication` class or simply copy this class in your project
 
 Create a class that extends `android.app.Application`, this class will setup the general behaviour.
