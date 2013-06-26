@@ -253,7 +253,7 @@ public class OpenxAdView extends ViewGroup {
         String openxHtml = "", zoneTag = "";
 
         zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://" : "http://")
-                + deliveryURL + '/' + jsTagURL, zoneID, getSource(),
+                + deliveryURL + '/' + jsTagURL, zoneID, getSource() == null ? "pre" : getSource(),
                 prng.nextLong(), softgamesAd.getViewportWidth(),
                 softgamesAd.getPixelRatio(), softgamesAd.getGameName(),
                 softgamesAd.getViewportHeight(),
