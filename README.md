@@ -59,7 +59,7 @@ _General permissions_
             </intent-filter>
         </activity>
 ```
-Also notice that the orientation for this actitivity is up to you. Both landscape and protrait orientation are supported. 
+Also notice that the **orientation** for this actitivity is up to you. Both landscape and protrait orientation are supported. 
 
 ### 4. Add BroadcastReceivers and IntentServices
 
