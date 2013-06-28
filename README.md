@@ -283,7 +283,7 @@ Token: gz9w80
 
 ## Known issues
 
-1. If the ***More games button*** does not appear it could be due to a misconfiguration. To test that the button is delivered please check this URL: _http://87.230.102.59:82/openx/www/delivery/afr.php?zoneid=320&viewport_width=1280&pixelratio=1.0&gamename=de.softgames.demo&viewport_height=800&conn_type=-1&manufacturer=Samsung&language=English&country=us&os=Android&osv=2.2&ip=&cb=-7517736019876486565&charset=UTF-8&source=pre_ and replace ***gamename*** with your package name. If you see an image the button is properly configured on our servers.
+1. If the **More games button** does not appear it could be due to a misconfiguration. To test that the button is delivered please check this URL: _http://87.230.102.59:82/openx/www/delivery/afr.php?zoneid=320&viewport_width=1280&pixelratio=1.0&gamename=de.softgames.demo&viewport_height=800&conn_type=-1&manufacturer=Samsung&language=English&country=us&os=Android&osv=2.2&ip=&cb=-7517736019876486565&charset=UTF-8&source=pre_ and replace ***gamename*** with your package name. If you see an image then the button is properly configured on our servers.
 
 2. The google cloud messaging requires the user to be logged in with a google account in order to send push
  notifications, which is not a major issue since most android devices are associated to a Google account. **Android 4.0 and higher do not require this.**
