@@ -18,6 +18,7 @@ import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.util.IframeTemplate;
 import de.softgames.sdk.util.DownloadHtmlTask;
 import de.softgames.sdk.util.HtmlTemplate;
+import de.softgames.sdk.util.SGSettings;
 import de.softgames.sdk.util.TemplateContext;
 
 
@@ -251,7 +252,11 @@ public class OpenxAdView extends ViewGroup {
     private String getZoneTemplate(int zoneID, int mode) {
         Log.d(LOGTAG, "getZoneTemplateHtml() zoneID: " + zoneID);
         String openxHtml = "", zoneTag = "";
-
+        
+        if (softgamesAd == null) {
+            Log.d(LOGTAG, "softgamesAd is null restore form sharedPreferences");
+            softgamesAd = SGSettings.restoreSoftgamesAdObj(context);
+        }
         zoneTag = String.format(URL_PLAIN, (hasHTTPS ? "https://" : "http://")
                 + deliveryURL + '/' + jsTagURL, zoneID, getSource() == null ? "pre" : getSource(),
                 prng.nextLong(), softgamesAd.getViewportWidth(),

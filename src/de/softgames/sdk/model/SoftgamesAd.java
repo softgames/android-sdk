@@ -6,6 +6,8 @@ package de.softgames.sdk.model;
  */
 public class SoftgamesAd {
 
+    private static final String OS = "Android";
+
     /** The game name. */
     private String gameName;
 
@@ -68,7 +70,7 @@ public class SoftgamesAd {
     public SoftgamesAd(String gameName, Integer viewportWidth,
             Integer viewPortHeight, Float pixelRatio, int connectionType,
             String deviceManufacturer, String locale, String country,
-            String os, String osVersion, String ipAddress) {
+            String osVersion, String ipAddress) {
         super();
         this.gameName = gameName;
         this.viewportWidth = viewportWidth;
@@ -78,9 +80,13 @@ public class SoftgamesAd {
         this.deviceManufacturer = deviceManufacturer;
         this.locale = locale;
         this.country = country;
-        this.os = os;
+        this.os = OS;
         this.osVersion = osVersion;
         this.ipAddress = ipAddress;
+    }
+
+    public SoftgamesAd() {
+
     }
 
     /**

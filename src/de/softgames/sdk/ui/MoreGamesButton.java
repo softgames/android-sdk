@@ -4,19 +4,10 @@
 package de.softgames.sdk.ui;
 
 
-import java.util.Random;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
-
-import de.softgames.sdk.OpenxAdView;
 import de.softgames.sdk.R;
 
 
@@ -25,19 +16,10 @@ import de.softgames.sdk.R;
  * 
  * @author rolandcastillo@softgames.de
  */
-public class MoreGamesButton extends FrameLayout implements OnClickListener {
+public class MoreGamesButton extends FrameLayout {
 
     /** The context. */
     private Context mContext;
-
-    /** The button more games. */
-    private OpenxAdView buttonMoreGames;
-
-    /** The new games ticker. */
-    // private TextView newGamesTicker;
-
-    /** The Google tracker. */
-    private Tracker mTracker;
 
     /**
      * Instantiates a new more games button.
@@ -70,8 +52,7 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener {
      */
     private void initComponents() {
         initContainer();
-        initButton();
-        // initTicker();
+        
     }
 
     /**
@@ -81,60 +62,8 @@ public class MoreGamesButton extends FrameLayout implements OnClickListener {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.sg_button_more_games_layout, this, true);
-        //setClickable(true);
-    }
-
-    /**
-     * Inits the ticker with a random number.
-     */
-    // private void initTicker() {
-    // newGamesTicker = (TextView)
-    // this.findViewById(R.id.sg_ticker_button_more_games);
-    // newGamesTicker.setText(getRandomNumber(1, 6) + "");
-    // }
-
-    /**
-     * Inits the button.
-     */
-    private void initButton() {
-        buttonMoreGames = (OpenxAdView) this
-                .findViewById(R.id.sg_button_more_games);
         
     }
 
-    /**
-     * Gets the random number.
-     * 
-     * @param low
-     *            the low
-     * @param high
-     *            the high
-     * @return the random number
-     */
-    private int getRandomNumber(int low, int high) {
-        Random random = new Random();
-        return random.nextInt(high - low) + low;
-    }
-
-    /**
-     * Track event.
-     */
-    private void trackEvent() {
-        // The google analytics object instance
-        GoogleAnalytics mInstance = GoogleAnalytics.getInstance(mContext);
-        // Get the existing tracker
-        mTracker = mInstance.getDefaultTracker();
-        mTracker.sendView("/MoreGamesScreen");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
-    @Override
-    public void onClick(View v) {        
-        //trackEvent();
-    }
 
 }

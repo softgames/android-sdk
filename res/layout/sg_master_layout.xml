@@ -5,6 +5,5 @@
     
     <include android:id="@+id/xpromo" layout="@layout/sg_activity_xpromotion"/>
     
-    <include android:id="@+id/adsLayout" layout="@layout/sg_activity_loading" android:visibility="gone"/>   
     
 </RelativeLayout>

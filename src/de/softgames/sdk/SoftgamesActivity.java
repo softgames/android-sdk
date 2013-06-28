@@ -5,27 +5,16 @@
 package de.softgames.sdk;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -42,9 +31,7 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
-import de.softgames.sdk.model.SoftgamesAd;
 import de.softgames.sdk.ui.SoftgamesUI;
-import de.softgames.sdk.util.NetworkType;
 import de.softgames.sdk.util.NetworkUtilities;
 import de.softgames.sdk.util.SGSettings;
 
@@ -59,15 +46,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     /** The Constant TAG. */
     private static final String TAG = SoftgamesActivity.class.getSimpleName();
 
-    /** The number of threads to keep in the pool. */
-    private static final int POOL_SIZE = 3;
-
     protected static final int ACTIVITY_RESULT_SETTINGS = 10;
-    
-    private static final String ANDROID_OS = "Android";
-
-    /** The schedule task executor. */
-    private ScheduledExecutorService scheduleTaskExecutor;
 
     /** The launcher activity. */
     private Class<?> launcherActivity = null;
@@ -79,11 +58,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
     private LinearLayout crossPromotionLayout;
 
-    private LinearLayout loadingScreenLayout;
-
     /** The openx custom view. */
-    private OpenxAdView loadingScreenAdView;
-
     private OpenxAdView crossPromoAdView;
 
     private ImageView teaserImage;
@@ -106,15 +81,14 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.sg_master_layout);
-        
+
         // We want to show the splash screen and the ads in full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                        
+
         res = getResources();
         layoutContainer = (RelativeLayout) findViewById(R.id.softgames_master);
         crossPromotionLayout = (LinearLayout) findViewById(R.id.xpromo);
-        loadingScreenLayout = (LinearLayout) findViewById(R.id.adsLayout);
 
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
 
@@ -125,17 +99,20 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         GoogleAnalytics mInstance = GoogleAnalytics.getInstance(this);
         // Get the existing tracker
         mTracker = mInstance.getDefaultTracker();
-        
-        boolean isFirstSession = isFirstSession();
-        
-        // Let's initialize the ad related objects
-        initOpenxAds();
 
+        boolean isFirstSession = isFirstSession();
+
+        // Let's initialize the ad related objects
+        SGSettings.initOpenxAds(this);
+
+        // if (isFirstSession) {
+        // startApp();
+        // } else {
         // The Openx ads are instantiated
-        loadingScreenAdView = (OpenxAdView) findViewById(R.id.adview);
         crossPromoAdView = (OpenxAdView) findViewById(R.id.adview_xpromo);
         // The green button shown in the xpromo screen
         buttonPlay = (Button) findViewById(R.id.button_play);
+        buttonPlay.setOnClickListener(this);
 
         // Custom type face
         TextView xpromoDividerText = (TextView) findViewById(R.id.divider_text);
@@ -164,91 +141,25 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         if (SGSettings.getTeaserImage() != null) {
             teaserImage.setImageDrawable(SGSettings.getTeaserImage());
         }
-        
-        //This tells AdjustIo about the launch of the Application.
-        AdjustIo.appDidLaunch(getApplication());
-
-        scheduleTaskExecutor = Executors.newScheduledThreadPool(POOL_SIZE);
 
         /*
          * This object is needed to get working the push notifications.
          */
         registrator = new SGRegistrator(this);
+
+        showCrosspromotion();
         /*
          * this method must be invoked in order to register the device on the
          * softgames server
          */
         registrator.registerMe();
+        // }
 
-        if (isFirstSession) {
-            // showLoadingScreen();
-            startApp();
-        } else {
-            showCrosspromotion();
-        }
+        // This tells AdjustIo about the launch of the Application.
+        // AdjustIo.appDidLaunch(getApplication());
+        LoadAdjustTask adjustTask = new LoadAdjustTask();
+        adjustTask.execute();
 
-        buttonPlay.setOnClickListener(this);
-
-    }
-
-    /**
-     * initializes the necessary objects to display ads.
-     */
-    private void initOpenxAds() {
-        String language = "", countryCode = "";
-        // Gets an instance of window manager for display related tasks
-        WindowManager windowManager = getWindowManager();
-        // The density is gather in order to determine the pixel ratio
-        Float density = SoftgamesUI.getScreenDensity(windowManager);
-
-        String packageName = getApplicationContext().getPackageName();
-        Display display = windowManager.getDefaultDisplay();
-        try {
-            Locale locale = getResources().getConfiguration().locale;
-            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            countryCode = tm.getSimCountryIso();
-            if (countryCode == null || countryCode.equals("")) {
-                countryCode = locale.getCountry();
-            }
-            language = locale.getDisplayLanguage();
-        } catch (Exception e) {
-            Log.e(TAG,
-                    "There was an error getting the language and country code");
-        }
-
-        int connectionType = NetworkUtilities
-                .getConnectionType(getApplicationContext());
-        String ipAddress = NetworkUtilities.getLocalIpAddress(getApplicationContext());
-        
-        SoftgamesAd softgamesAd = new SoftgamesAd(packageName,
-                display.getWidth(), display.getHeight(), density,
-                connectionType, Build.MANUFACTURER, language, countryCode,
-                ANDROID_OS, Build.VERSION.RELEASE,
-                ipAddress);
-        Log.d(TAG, softgamesAd.toString());
-        OpenxAdView.setSoftgamesAd(softgamesAd);
-
-        String sInternetStatus = "no";
-        if (connectionType != NetworkType.UNKNOWN.getValue()) {
-            sInternetStatus = "yes";
-        }
-        mTracker.sendEvent("internet_connection", sInternetStatus,
-                Long.valueOf(connectionType) + "", Long.valueOf(connectionType));
-        
-        //TODO TBD the installation date, should it be an event? 
-        mTracker.sendEvent("user_info", "installation_date",
-                getInstallationDate(), 0L);
-    }
-
-    private String getInstallationDate() {
-        // Restore preferences
-        SharedPreferences sgSettings = getSharedPreferences(
-                SGSettings.PREFS_NAME, 0);
-
-        String installationDate = sgSettings.getString(
-                SGSettings.INSTALLATION_DATE, getCurrentDate());
-        
-        return installationDate;
     }
 
     /**
@@ -275,7 +186,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     }
 
     /**
-     * The activity set as.
+     * Start activity set as launcher.
      * 
      * {@link de.softgames.sdk.util.SGSettings#launcherActivity
      * launcherActivity} is started
@@ -304,38 +215,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
 
     }
 
-    /**
-     * Requests an ad and displays it during the given seconds.
-     */
-    private void showLoadingScreen() {
-        long adDelay = SGSettings.AD_DELAY;
-        if (!NetworkUtilities.isOnline(this)) {
-            if (SGSettings.isInternetRequired()) {
-                buildRetryConnectionDialog();
-            } else {
-                startApp();
-            }
-
-        } else {
-            try {
-                loadingScreenAdView.loadInIframe();
-                crossPromotionLayout.setVisibility(View.GONE);
-                loadingScreenLayout.setVisibility(View.VISIBLE);
-
-                
-                // Thread to show the ads during the given seconds
-                scheduleTaskExecutor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        startApp();
-                    }
-                }, adDelay, TimeUnit.SECONDS);
-            } catch (Exception e) {
-                Log.e(TAG, "error requesting ad", e);
-            }
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -344,7 +223,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        scheduleTaskExecutor.shutdown();
     }
 
     /**
@@ -363,7 +241,7 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        showLoadingScreen();
+                        showCrosspromotion();
                     }
                 });
 
@@ -400,7 +278,8 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                 Log.d(TAG, "This is the very first session");
                 SharedPreferences.Editor editor = sgSettings.edit();
                 editor.putBoolean(SGSettings.FIRST_SESSION, false);
-                editor.putString(SGSettings.INSTALLATION_DATE, getCurrentDate());
+                editor.putString(SGSettings.INSTALLATION_DATE,
+                        SGSettings.getCurrentDate());
                 editor.commit();
                 return true;
             } else {
@@ -412,19 +291,10 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Calendar calendar = Calendar.getInstance();
-        String currentDate = dateFormat.format(calendar.getTime());
-        Log.e(TAG, currentDate);
-        return currentDate;
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_play) {
-            // showLoadingScreen();
+
             crossPromotionLayout.startAnimation(AnimationUtils.loadAnimation(
                     SoftgamesActivity.this, android.R.anim.fade_out));
             startApp();
@@ -439,6 +309,17 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
                     SoftgamesActivity.class);
             startActivity(intent);
         }
+    }
+
+    class LoadAdjustTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // This tells AdjustIo about the launch of the Application.
+            AdjustIo.appDidLaunch(getApplication());
+            return null;
+        }
+
     }
 
 }
