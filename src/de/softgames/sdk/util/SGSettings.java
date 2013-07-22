@@ -117,7 +117,7 @@ public final class SGSettings {
             if (countryCode == null || countryCode.equals("")) {
                 countryCode = locale.getCountry();
             }
-            language = locale.getDisplayLanguage();
+            language = locale.getDefault().toString();
         } catch (Exception e) {
             Log.e(TAG,
                     "There was an error getting the language and country code");
