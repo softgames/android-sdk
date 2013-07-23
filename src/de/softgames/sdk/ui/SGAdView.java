@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 
 import com.google.ads.Ad;
 import com.google.ads.AdListener;
+import com.google.ads.AdRequest;
 import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdView;
 
@@ -97,6 +98,10 @@ public class SGAdView extends FrameLayout implements AdListener {
     private void initButton() {
         buttonNoAds = (ImageButton) this.findViewById(R.id.sg_button_no_ads);
                 
+    }
+    
+    public void loadAd(AdRequest ad){
+        admobView.loadAd(ad);
     }
 
     @Override

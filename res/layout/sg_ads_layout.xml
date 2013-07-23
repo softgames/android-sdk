@@ -9,8 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="20dp"
         ads:adSize="BANNER"
         ads:adUnitId="@string/sg_admob_key"
         ads:loadAdOnCreate="true"/>
