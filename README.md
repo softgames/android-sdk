@@ -61,9 +61,9 @@ _General permissions_
 ```
 Also notice that the **orientation** for this actitivity is up to you. Both landscape and protrait orientation are supported. 
 
-### 3. Extend each of your activities from _SoftgamesAbstractActivity.java_ instead of the default Activity object.
+### 3. Extend each of your activities from `SoftgamesAbstractActivity.java` instead of the default Activity object.
 
-*** Example: ***
+**Example: **
 
 ```java
 public class MyActivity extends SoftgamesAbstractActivity{
@@ -71,7 +71,7 @@ public class MyActivity extends SoftgamesAbstractActivity{
 }
 ```
 
-In the _strings.xml_ file add the following entry 
+In the `strings.xml` file add the following entry 
 
 ```xml
 <string name="sg_adjust_token">TOKEN_PRIVIDED_BY_SOFTGAMES<string>
