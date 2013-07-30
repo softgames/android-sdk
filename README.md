@@ -1,4 +1,4 @@
-# Guide to the Softgames SDK 2.0
+# Guide to the Softgames SDK 2.1
 
 _This page describes the Softgames SDK functionality and usage._
 You can check an example project containing this code  [here](https://github.com/softgames/android-sdk-demo)!
@@ -61,7 +61,25 @@ _General permissions_
 ```
 Also notice that the **orientation** for this actitivity is up to you. Both landscape and protrait orientation are supported. 
 
-### 4. Add BroadcastReceivers and IntentServices
+### 3. Extend each of your activities from _SoftgamesAbstractActivity.java_ instead of the default Activity object.
+
+*** Example: ***
+
+```java
+public class MyActivity extends SoftgamesAbstractActivity{
+	//Awesome code goes here...
+}
+```
+
+In the _strings.xml_ file add the following entry 
+
+```xml
+<string name="sg_adjust_token">TOKEN_PRIVIDED_BY_SOFTGAMES<string>
+```
+
+Softgames MUST provide the token necessary to track events, if you skip this step the tracking token will be the one by default.
+
+### 5. Add BroadcastReceivers and IntentServices
 
 Lastly, add the BroadcastReceiver and the IntentService which are required by Google cloud messaging and Google analytics
 
@@ -93,7 +111,7 @@ Lastly, add the BroadcastReceiver and the IntentService which are required by Go
         </receiver>
 ```
 
-### 5. Create the `SoftgamesApplication` class or simply copy this class in your project
+### 6. Create the `SoftgamesApplication` class or simply copy this class in your project
 
 Create a class that extends `android.app.Application`, this class will setup the general behaviour.
 This is basically where we set the configurations such as: 
@@ -148,7 +166,7 @@ Add this to your Manifest file. The name attribute of the application item is th
 </application>        
 ```
 
-### 6. Include the MoreGamesButton view in your game activity
+### 7. Include the MoreGamesButton view in your game activity
 
 ```xml
    <view class="de.softgames.sdk.ui.MoreGamesButton"
@@ -156,7 +174,7 @@ Add this to your Manifest file. The name attribute of the application item is th
        android:layout_height="wrap_content"/>
 ```       
 
-### 7. Set up the banner for ads
+### 8. Set up the banner for ads
 
 Add the Admob activity to your manifest
 ```xml
@@ -213,11 +231,13 @@ public void hideBannerAds(){
         });
 }
 ```
-### 8. Set up the push notifications
+### 9. Set up the push notifications
 
 The push notifications are automatically set up in the SoftgamesActivity
 
-## Add tracking of revenue
+### 10. AdjustIO sdk
+
+## 10.1 Add tracking of revenue
 
 If users purchase premium packages and generate revenue we want to automatically track those revenues. You need to set this up for each available package. Example: If a package click is worth one Cent, you could make the following call to track that revenue:
 
@@ -241,7 +261,7 @@ Token: lkc7ft
 The tokens are provided by us.
 
 
-## Add tracking of events
+## 10.2 Add tracking of events
 
 ```java
 //The parameter is the token provided by us
@@ -281,7 +301,7 @@ Name: User posted via Facebook example
 Token: gz9w80
 ```
 
-## Known issues
+### Known issues
 
 1. If the **More games button** does not appear it could be due to a misconfiguration. To test that the button is delivered please check this URL: _http://87.230.102.59:82/openx/www/delivery/afr.php?zoneid=320&viewport_width=1280&pixelratio=1.0&gamename=de.softgames.demo&viewport_height=800&conn_type=-1&manufacturer=Samsung&language=English&country=us&os=Android&osv=2.2&ip=&cb=-7517736019876486565&charset=UTF-8&source=pre_ and replace ***gamename*** with your package name. If you see an image then the button is properly configured on our servers.
 
