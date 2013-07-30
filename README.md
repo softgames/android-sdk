@@ -63,7 +63,7 @@ Also notice that the **orientation** for this actitivity is up to you. Both land
 
 ### 3. Extend each of your activities from `SoftgamesAbstractActivity.java` instead of the default Activity object.
 
-**Example: **
+**Example:**
 
 ```java
 public class MyActivity extends SoftgamesAbstractActivity{
