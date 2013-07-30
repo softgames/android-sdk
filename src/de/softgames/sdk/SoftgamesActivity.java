@@ -5,14 +5,12 @@
 package de.softgames.sdk;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.adeven.adjustio.AdjustIo;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
@@ -41,7 +38,7 @@ import de.softgames.sdk.util.SGSettings;
  * 
  * @author roland.castillo@softgames.de
  */
-public class SoftgamesActivity extends Activity implements OnClickListener {
+public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnClickListener {
 
     /** The Constant TAG. */
     private static final String TAG = SoftgamesActivity.class.getSimpleName();
@@ -154,11 +151,6 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
          */
         registrator.registerMe();
         // }
-
-        // This tells AdjustIo about the launch of the Application.
-        // AdjustIo.appDidLaunch(getApplication());
-        LoadAdjustTask adjustTask = new LoadAdjustTask();
-        adjustTask.execute();
 
     }
 
@@ -311,15 +303,5 @@ public class SoftgamesActivity extends Activity implements OnClickListener {
         }
     }
 
-    class LoadAdjustTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // This tells AdjustIo about the launch of the Application.
-            AdjustIo.appDidLaunch(getApplication());
-            return null;
-        }
-
-    }
 
 }
