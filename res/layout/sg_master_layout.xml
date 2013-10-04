@@ -1,9 +1,0 @@
-<RelativeLayout android:id="@+id/softgames_master" xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ox="http://softgames.de/schemas/android/openx/0.1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
-    <include android:id="@+id/xpromo" layout="@layout/sg_activity_xpromotion"/>
-    
-    
-</RelativeLayout>

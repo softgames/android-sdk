@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<!-- The width of the big icons in the notifications. -->
-    <dimen name="sg_notification_large_icon_width">48dp</dimen>
-    <!-- The width of the big icons in the notifications. -->
-    <dimen name="sg_notification_large_icon_height">48dp</dimen>    
-</resources>
