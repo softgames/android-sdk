@@ -16,9 +16,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
-
 import de.softgames.sdk.OpenxAdView;
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.model.SoftgamesAd;
@@ -63,12 +60,6 @@ public final class SGSettings {
     /** Google API project id registered to use GCM. */
     public static final String SENDER_ID = "1079642456342";
 
-    /** The google analytics instance. */
-    private static GoogleAnalytics mGaInstance;
-
-    /** The m tracker. */
-    private static Tracker mTracker;
-
     /** The launcher activity. */
     private static Class<?> launcherActivity;
 
@@ -80,21 +71,6 @@ public final class SGSettings {
     private static String gameName;
 
     private static boolean isOrientationLandscape = false;
-
-    /**
-     * Inits the google analytics.
-     */
-    public static void initGAnalyticsTracker(Context ctx) {
-        // Get the GoogleAnalytics singleton.
-        mGaInstance = GoogleAnalytics.getInstance(ctx);
-
-        // Use the GoogleAnalytics singleton to get a Tracker.
-        mTracker = mGaInstance.getTracker("UA-39037923-1");
-
-        // Set the created tracker as default
-        mGaInstance.setDefaultTracker(mTracker);
-
-    }
 
     /**
      * initializes the necessary objects to display ads.
@@ -141,20 +117,6 @@ public final class SGSettings {
         if (connectionType != NetworkType.UNKNOWN.getValue()) {
             sInternetStatus = "yes";
         }
-
-        if (mTracker == null) {
-            // The google analytics object instance
-            GoogleAnalytics mInstance = GoogleAnalytics.getInstance(activity);
-            // Get the existing tracker
-            mTracker = mInstance.getDefaultTracker();
-        }
-
-        mTracker.sendEvent("internet_connection", sInternetStatus,
-                Long.valueOf(connectionType) + "", Long.valueOf(connectionType));
-        
-        // TODO TBD the installation date, should it be an event?
-        mTracker.sendEvent("user_info", "installation_date",
-                getInstallationDate(activity), 0L);
         
     }
 

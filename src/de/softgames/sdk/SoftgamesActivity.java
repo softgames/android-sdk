@@ -24,9 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
-
 import de.softgames.sdk.exceptions.IllegalLauncherActivityException;
 import de.softgames.sdk.ui.SoftgamesUI;
 import de.softgames.sdk.util.NetworkUtilities;
@@ -62,12 +59,6 @@ public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnCl
 
     private Button buttonPlay;
 
-    private Tracker mTracker;
-
-    // Registrator object used to establish a communication with Google Cloud
-    // messaging
-    public SGRegistrator registrator;
-
     /*
      * (non-Javadoc)
      * 
@@ -85,17 +76,14 @@ public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnCl
 
         res = getResources();
         layoutContainer = (RelativeLayout) findViewById(R.id.softgames_master);
+        Log.d("PENIS", "iuslayout is no tnull: " + (layoutContainer != null));
         crossPromotionLayout = (LinearLayout) findViewById(R.id.xpromo);
+        Log.d("PENIS", "crossPromotionLayout is not null: " + (crossPromotionLayout != null));
 
         layoutContainer.startAnimation(SoftgamesUI.inFromRightAnimation());
 
         // Keep screen awake
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // The google analytics object instance
-        GoogleAnalytics mInstance = GoogleAnalytics.getInstance(this);
-        // Get the existing tracker
-        mTracker = mInstance.getDefaultTracker();
 
         boolean isFirstSession = isFirstSession();
 
@@ -139,19 +127,8 @@ public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnCl
             teaserImage.setImageDrawable(SGSettings.getTeaserImage());
         }
 
-        /*
-         * This object is needed to get working the push notifications.
-         */
-        registrator = new SGRegistrator(this);
 
         showCrosspromotion();
-        /*
-         * this method must be invoked in order to register the device on the
-         * softgames server
-         */
-        registrator.registerMe();
-        // }
-
     }
 
     /**
@@ -168,8 +145,6 @@ public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnCl
         } else {
             try {
                 crossPromoAdView.load();
-                mTracker.sendView("/CrossPromotionPage");
-
             } catch (Exception e) {
                 Log.e(TAG, "error", e);
             }
@@ -186,17 +161,10 @@ public class SoftgamesActivity extends SoftgamesAbstractActivity implements OnCl
     private void startApp() {
         Log.d(TAG, "startApp()");
         try {
-            registrator.killTask();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-        try {
             // The launcher activity set by the user as entry point is
             // instantiated
             launcherActivity = SGSettings.getLauncherActivity();
             Log.d(TAG, "Starting the Activty indicated as entry point");
-            mTracker.sendView("/GameStarted");
             Intent intent = new Intent(this, launcherActivity);
             startActivity(intent);
         } catch (IllegalLauncherActivityException e) {

@@ -18,9 +18,6 @@ import java.util.Random;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gcm.GCMRegistrar;
-
-
 public final class ServerUtilities {
 
     public static final int MAX_ATTEMPTS = 2;
@@ -58,7 +55,6 @@ public final class ServerUtilities {
             try {
                 // Registering on server
                 post(serverUrl, params);
-                GCMRegistrar.setRegisteredOnServer(context, true);
                 // registered successfully
                 Log.d(TAG, "registered on server!");
                 return true;
@@ -100,7 +96,6 @@ public final class ServerUtilities {
 
         try {
             delete(serverUrl, null);
-            GCMRegistrar.setRegisteredOnServer(context, false);
             Log.d(TAG, "unregistered from server");
 
         } catch (IOException e) {
